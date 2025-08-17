@@ -1,24 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+{% load static %}
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="{% static 'basic/css/style.css' %}">
 </head>
 <body>
-{{ title }}
-{% for i in top_nav %}
-<a href="{% url i.url_name %}">{{ i.title }}</a>
-{% endfor %}
-<p></p>
-{% for i in side_nav %}
-<p><a href="{% url i.url_name %}">{{ i.title }}</a></p>
-{% endfor %}
-<p></p>
-<form action="{% url 'users:logout' %}" method="post">
-    {% csrf_token %}
-    <button type="submit">Выход</button>
-</form>
-{% block content %}
-{% endblock %}
+    <!-- Верхнее меню с кнопкой выхода -->
+<header class="header">
+    <div class="top-nav">
+        <a href="{% url 'home' %}" class="home-logo-link">
+            <img src="{% static 'basic/images/logo.jpg' %}" alt="Главная" class="header-logo">
+        </a>
+        <div class="nav-right"> <!-- Обёртка для правых элементов -->
+            {% if user.is_authenticated %}
+                <a href="{% url 'profile' %}" class="nav-link">{{ user.username }}</a>
+                <form action="{% url 'users:logout' %}" method="post" class="logout-form">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-btn">Выход</button>
+                </form>
+            {% else %}
+                <a href="{% url 'users:login' %}" class="nav-link">Вход</a>
+                <a href="{% url 'users:register' %}" class="nav-link">Регистрация</a>
+            {% endif %}
+        </div>
+    </div>
+</header>
+    </header>
+
+    <!-- Боковое меню -->
+    <aside class="side-nav">
+        {% for i in side_nav %}
+            <a href="{% url i.url_name %}" class="side-link">{{ i.title }}</a>
+        {% endfor %}
+    </aside>
+
+    <!-- Основной контент -->
+    <main class="content">
+        {% block content %}
+        {% endblock %}
+    </main>
 </body>
 </html>

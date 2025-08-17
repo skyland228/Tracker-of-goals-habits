@@ -1,0 +1,186 @@
+/* Общие стили */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+    color: #333;
+}
+/* Верхнее меню */
+.header {
+    position: relative;
+    z-index: 300;
+    background: #2c3e50;
+    padding: 15px 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    width: 100%; /* Добавлено */
+}
+
+.top-nav {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%; /* Добавлено */
+}
+
+/* Группировка правых элементов */
+.nav-right {
+    display: flex;
+    align-items: center;
+}
+.header {
+    width: 100%;
+    background: #2c3e50;
+    padding: 0;
+}
+
+.top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 100%; /* Теперь на всю ширину */
+    margin: 0;
+    padding: 0;
+}
+
+.home-logo-link {
+    display: block;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1; /* Растягивается на всё доступное пространство */
+}
+
+.header-logo {
+    height: 50px; /* Высота как у шапки */
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    object-position: left;
+    padding: 5px 0 5px 20px;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding-right: 20px;
+    background: #2c3e50;
+}
+
+/* Ссылки */
+.nav-link {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+    padding: 8px 12px; /* Добавлено */
+}
+
+.nav-link:hover {
+    color: #3498db;
+}
+
+/* Кнопка выхода */
+.logout-btn {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.logout-btn:hover {
+    background: #c0392b;
+}
+
+/* Боковое меню */
+.side-nav {
+    position: fixed;
+    left: 0;
+    top: 50px;
+    z-index: 200;
+    width: 200px;
+    height: 100%;
+    background: white;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+}
+
+.side-link {
+    display: block;
+    color: #2c3e50;
+    padding: 10px 0;
+    text-decoration: none;
+    border-bottom: 1px solid #eee;
+}
+
+.side-link:hover {
+    color: #3498db;
+}
+
+/* Основной контент */
+.content {
+    margin-left: 220px;
+    padding: 20px;
+}
+/* Общие стили формы */
+.auth-form {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Стили для группы полей (label + input) */
+.form-group {
+    margin-bottom: 15px;
+}
+
+/* Стили для label */
+.form-label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Стили для input, textarea и других полей */
+.auth-form input[type="text"],
+.auth-form input[type="password"],
+.auth-form input[type="email"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+/* Стили для ошибок */
+.form-error {
+    color: #d9534f; /* Красный цвет для ошибок */
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/* Стили для кнопки */
+.submit-btn {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s;
+}
+
+.submit-btn:hover {
+    background: #0056b3;
+}
