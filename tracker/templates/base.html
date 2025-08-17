@@ -6,6 +6,18 @@
 </head>
 <body>
 {{ title }}
+{% for i in top_nav %}
+<a href="{% url i.url_name %}">{{ i.title }}</a>
+{% endfor %}
+<p></p>
+{% for i in side_nav %}
+<p><a href="{% url i.url_name %}">{{ i.title }}</a></p>
+{% endfor %}
+<p></p>
+<form action="{% url 'users:logout' %}" method="post">
+    {% csrf_token %}
+    <button type="submit">Выход</button>
+</form>
 {% block content %}
 {% endblock %}
 </body>
