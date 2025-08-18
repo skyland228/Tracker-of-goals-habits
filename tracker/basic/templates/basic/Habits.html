@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="habits-list">
+    {% for habit in habits %}
+    <div class="habit-item
+        {% if habit.category.name == 'Здоровье' %}habit-health
+        {% elif habit.category.name == 'Работа' %}habit-work
+        {% elif habit.category.name == 'Учеба' %}habit-study
+        {% endif %}">
+        <h3>{{ habit.name }}</h3>
+
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

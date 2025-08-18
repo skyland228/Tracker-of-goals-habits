@@ -32,6 +32,7 @@ body {
     align-items: center;
 }
 .header {
+    position: fixed;
     width: 100%;
     background: #2c3e50;
     padding: 0;
@@ -123,11 +124,44 @@ body {
     color: #3498db;
 }
 
-/* Основной контент */
-.content {
-    margin-left: 220px;
-    padding: 20px;
+/* Общие стили списка привычек */
+.habits-list {
+    max-width: 900px;
+    margin: 90px auto;
 }
+
+/* Стиль элемента привычки */
+.habit-item {
+    padding: 1px 20px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+}
+
+/* Цвета для категорий */
+.habit-health {
+    background-color: #e8f5e9; /* Мягкий зеленый */
+    border-left: 4px solid #4caf50;
+}
+
+
+.content {
+    margin-left: 220px; /* Ширина меню (200px) + отступ (20px) */
+    padding: 60px;
+    min-height: calc(100vh - 60px); /* 100% высоты минус шапка */
+    background: #f8f9fa; /* Фон для контента */
+}
+.centered-content {
+    margin-left: px; /* Ширина бокового меню + отступ */
+    margin-top: 0px; /* Высота верхнего меню + отступ */
+    padding: -5px;
+    max-width: 110px;
+    margin-right: auto;
+    margin-bottom: 40px;
+    text-align: center;
+}
+
 /* Общие стили формы */
 .auth-form {
     max-width: 400px;
