@@ -1,6 +1,8 @@
-from django.forms import forms
+from django import forms
+from .models import HabitStatus
 
-#
-# class AddHabitForm(forms.ModelForm):
-#     name = forms.CharField()
-#     category =
+
+class HabitStatusForm(forms.ModelForm):
+    class Meta:
+        model = HabitStatus
+        fields = ['is_completed']

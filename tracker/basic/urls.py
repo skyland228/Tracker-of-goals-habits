@@ -4,8 +4,10 @@ from . import views
 
 urlpatterns = [
     path('', views.home, name = 'home'),
-    path('profile/',views.profile, name = 'profile'),
+    path('profile/',views.Profile.as_view(), name = 'profile'),
     path('habits/', views.Habits.as_view(), name = 'habits'),
-    path('goals/', views.goals, name = 'goals'),
+    path('status/<int:pk>/update/', views.HabitStatusUpdateView.as_view(), name='habitstatus_update'),
+    path('general_goals/', views.GeneralGoals.as_view(), name = 'general_goals'),
+    path('temporal_goals/', views.TemporalGoals.as_view(), name='temporal_goals'),
     path('progress/', views.progress, name = 'progress'),
 ]

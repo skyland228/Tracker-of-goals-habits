@@ -8,8 +8,21 @@
         {% elif habit.category.name == 'Работа' %}habit-work
         {% elif habit.category.name == 'Учеба' %}habit-study
         {% endif %}">
-        <h3>{{ habit.name }}</h3>
 
+        <span>{{ habit.name }}</span>
+
+        {% with status=habit.statuses.all|dictsort:"date"|last %}
+                <form action="{% url 'habitstatus_update' status.id %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="habit-status" style="border:none; background:none; font-size:14px; cursor:pointer;">
+                        {% if status.is_completed %}
+                            ✅
+                        {% else %}
+                            ⬜
+                        {% endif %}
+                    </button>
+                </form>
+        {% endwith %}
     </div>
     {% endfor %}
 </div>

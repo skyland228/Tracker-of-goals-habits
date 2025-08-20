@@ -129,16 +129,102 @@ body {
     max-width: 900px;
     margin: 90px auto;
 }
+.habit-status {
+    position: absolute; /* плавающая внутри habit-item */
+    top: 5px;           /* от верхнего края блока */
+    right: 5px;         /* от правого края блока */
+    font-size: 14px;    /* нормальный размер, чтобы не выходило за пределы блока */
+}
 
 /* Стиль элемента привычки */
 .habit-item {
-    padding: 1px 20px;
+    position: relative;  /* Важно! Теперь абсолютные элементы внутри будут привязаны к этому блоку */
+    padding: 11px 20px;
     margin-bottom: 15px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     transition: all 0.3s ease;
 }
+.progress-info {
+    background: #f8f9fa;
+    padding: 25px;
+    border-radius: 12px;
+    margin: 20px 0;
+}
 
+.progress-item {
+    margin: 25px 0;
+}
+
+.progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 16px;
+}
+
+.numbers {
+    color: #28a745;
+    font-size: 16px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 12px;
+    background: #e9ecef;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    border-radius: 6px;
+    transition: width 0.3s ease;
+    position: relative;
+}
+
+/* Цвета для разных уровней прогресса */
+.progress-red {
+    background: linear-gradient(90deg, #dc3545, #e35d6a);
+}
+
+.progress-orange {
+    background: linear-gradient(90deg, #fd7e14, #ff9b40);
+}
+
+.progress-lightgreen {
+    background: linear-gradient(90deg, #20c997, #3dd4ac);
+}
+
+.progress-green {
+    background: linear-gradient(90deg, #28a745, #4bc05c);
+}
+
+.progress-darkgreen {
+    background: linear-gradient(90deg, #1e7e34, #2ca04e);
+}
+
+/* Полоски для красоты (опционально) */
+.progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-image: linear-gradient(
+        -45deg,
+        rgba(255, 255, 255, 0.2) 25%,
+        transparent 25%,
+        transparent 50%,
+        rgba(255, 255, 255, 0.2) 50%,
+        rgba(255, 255, 255, 0.2) 75%,
+        transparent 75%,
+        transparent
+    );
+    background-size: 20px 20px;
+}
 /* Цвета для категорий */
 .habit-health {
     background-color: #e8f5e9; /* Мягкий зеленый */

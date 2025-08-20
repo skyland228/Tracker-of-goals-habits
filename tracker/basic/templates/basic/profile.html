@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- basic/profile.html -->
+<div class="profile">
+    <h2>Профиль пользователя: {{ user.username }}</h2>
+
+    <div class="progress-info">
+        <h3>📊 Ваш прогресс</h3>
+
+        <!-- Прогресс за сегодня -->
+        <div class="progress-item">
+            <div class="progress-header">
+                <span>Сегодня:</span>
+                <strong class="numbers">{{ today_progress.text }} ({{ today_progress.percentage }}%)</strong>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill
+                    {% if today_progress.percentage < 20 %}progress-red
+                    {% elif today_progress.percentage < 40 %}progress-orange
+                    {% elif today_progress.percentage < 60 %}progress-lightgreen
+                    {% elif today_progress.percentage < 80 %}progress-green
+                    {% else %}progress-darkgreen
+                    {% endif %}"
+                    style="width: {{ today_progress.width }}%">
+                </div>
+            </div>
+        </div>
+
+        <!-- Прогресс за все время -->
+        <div class="progress-item">
+            <div class="progress-header">
+                <span>Всего:</span>
+                <strong class="numbers">{{ total_progress.text }} ({{ total_progress.percentage }}%)</strong>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill
+                    {% if total_progress.percentage < 20 %}progress-red
+                    {% elif total_progress.percentage < 40 %}progress-orange
+                    {% elif total_progress.percentage < 60 %}progress-lightgreen
+                    {% elif total_progress.percentage < 80 %}progress-green
+                    {% else %}progress-darkgreen
+                    {% endif %}"
+                    style="width: {{ total_progress.width }}%">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
