@@ -230,7 +230,22 @@ body {
     background-color: #e8f5e9; /* Мягкий зеленый */
     border-left: 4px solid #4caf50;
 }
+.streak-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
 
+.streak {
+    background: linear-gradient(135deg, #ff6b35, #ff8e53);
+    color: white;
+    padding: 15px 30px;
+    border-radius: 25px;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
 
 .content {
     margin-left: 220px; /* Ширина меню (200px) + отступ (20px) */
