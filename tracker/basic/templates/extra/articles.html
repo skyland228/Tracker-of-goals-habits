@@ -9,13 +9,19 @@
 </head>
 <style>
         /* Дополнительные стили только для статьи */
+        /* Контейнер статьи */
         .article-container {
-            max-width: 800px;
-            margin: 20px auto;
+            width: calc(100% - 200px);   /* ширина статьи минус ширина бокового меню */
+            margin: -50px 0 0 200px;      /* отступ сверху = высота top-nav, слева = ширина side-nav */
             padding: 20px;
-            background: white;
-            border-radius: 4px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            background: #fff;
+            box-sizing: border-box;      /* чтобы padding не съедал ширину */
+        }
+
+        /* Основной контейнер под статью */
+        main.content {
+            margin: 0;
+            padding: 1;
         }
 
         .article-header {
@@ -37,8 +43,8 @@
         }
 
         .article-content {
-            line-height: 1.7;
-            font-size: 16px;
+            line-height: 1.2;
+            font-size: 15px;
         }
 
         .article-content p {

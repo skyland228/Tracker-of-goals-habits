@@ -3,27 +3,57 @@
 {% block content %}
 <div class="habits-list">
     {% for habit in habits %}
-    <div class="habit-item
+    {% with status=habit.statuses.all|dictsort:"date"|last %}
+    <!-- Класс habit-completed должен быть на ОСНОВНОМ блоке .habit-item -->
+    <div class="habit-item {% if status.is_completed %}habit-completed{% endif %}
         {% if habit.category.name == 'Здоровье' %}habit-health
         {% elif habit.category.name == 'Работа' %}habit-work
         {% elif habit.category.name == 'Учеба' %}habit-study
         {% endif %}">
 
-        <span>{{ habit.name }}</span>
+        <!-- Форма для отметки статуса привычки -->
+        <form action="{% url 'habitstatus_update' status.id %}" method="post" style="display:inline;">
+            {% csrf_token %}
 
-        {% with status=habit.statuses.all|dictsort:"date"|last %}
-                <form action="{% url 'habitstatus_update' status.id %}" method="post" style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="habit-status" style="border:none; background:none; font-size:14px; cursor:pointer;">
-                        {% if status.is_completed %}
-                            ✅
-                        {% else %}
-                            ⬜
-                        {% endif %}
-                    </button>
-                </form>
-        {% endwith %}
+            <!-- Весь контент привычки внутри кнопки -->
+            <button type="submit" class="habit-status-btn"
+                    style="border:none; background:none; cursor:pointer; text-align:left; width:100%; padding:10px;">
+
+                <!-- Название и статистика -->
+                <div class="habit-header">
+                    <span class="habit-name">{{ habit.name }}</span>
+                    <span class="habit-stats">({{ habit.completed_days }}/{{ habit.total_days }})</span>
+                </div>
+
+                <!-- отображение шкалы прогресса -->
+                <div class="progress-bar">
+                    <div class="progress-fill
+                        {% if habit.progress >= 80 %}progress-high
+                        {% elif habit.progress >= 50 %}progress-medium
+                        {% else %}progress-low
+                        {% endif %}"
+                        style="width: {{ habit.progress }}%;">
+                    </div>
+                </div>
+
+            </button>
+        </form>
     </div>
+    {% endwith %}
     {% endfor %}
 </div>
+{% if is_paginated %}
+<div class="pagination">
+  {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}" class="page-btn">Prev</a>
+  {% endif %}
+
+  <span class="page-info">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+
+  {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}" class="page-btn">Next</a>
+  {% endif %}
+</div>
+{% endif %}
+<a href="{% url 'add_habit' %}">Создать привычку</a>
 {% endblock %}

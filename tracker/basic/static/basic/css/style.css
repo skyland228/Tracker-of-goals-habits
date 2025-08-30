@@ -129,22 +129,62 @@ body {
     max-width: 900px;
     margin: 90px auto;
 }
+
 .habit-status {
     position: absolute; /* плавающая внутри habit-item */
-    top: 5px;           /* от верхнего края блока */
-    right: 5px;         /* от правого края блока */
+    top: -2px;           /* от верхнего края блока */
+    right: -10px;         /* от правого края блока */
     font-size: 14px;    /* нормальный размер, чтобы не выходило за пределы блока */
 }
+/* Зачеркивание всего блока */
+.habit-item.habit-completed::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    right: 20px;
+    height: 2px;
+    background-color: #888;
+    transform: translateY(-50%);
+    z-index: 1;
+}
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
 
+.page-btn {
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #333;
+}
+
+.page-btn:hover {
+    background: #f0f0f0;
+}
+
+.page-info {
+    line-height: 30px;
+}
+/* Затемнение содержимого */
+.habit-item.habit-completed .habit-name,
+.habit-item.habit-completed .habit-stats{
+    opacity: 0.6;
+}
 /* Стиль элемента привычки */
 .habit-item {
     position: relative;  /* Важно! Теперь абсолютные элементы внутри будут привязаны к этому блоку */
-    padding: 11px 20px;
+    padding: 20px 30px;
     margin-bottom: 15px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     transition: all 0.3s ease;
 }
+
 .progress-info {
     background: #f8f9fa;
     padding: 25px;
@@ -224,6 +264,47 @@ body {
         transparent
     );
     background-size: 20px 20px;
+}
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+/* Заполненная часть */
+.progress-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.5s ease;
+}
+
+/* Цвета через отдельные классы */
+.progress-high {
+    background: linear-gradient(90deg, #4caf50, #66bb6a); /* Зеленый */
+}
+/* Стили для ссылки "Добавить привычку" */
+.add-habit-link {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #667eea;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+
+.add-habit-link:hover {
+    background-color: #5a67d8;
+}
+.progress-medium {
+    background: linear-gradient(90deg, #ff9800, #ffa726); /* Оранжевый */
+}
+
+.progress-low {
+    background: linear-gradient(90deg, #f44336, #ef5350); /* Красный */
 }
 /* Цвета для категорий */
 .habit-health {
