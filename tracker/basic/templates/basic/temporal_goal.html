@@ -1,7 +1,14 @@
 {% extends 'base.html' %}
 
 {% block content %}
-{% for i in goals %}
-<p>{{ i.name }}</p>
+<div class="habits-list">
+{% for goal in goals %}
+<div class="habit-item {% if goal.general_goal.theme == 'Программирование' %}habit-programming
+{% elif goal.general_goal.theme == 'Здоровье'%}habit-health
+{% endif %}">
+    <span class="habit-title">{{ goal.name }}</span>
+    <span class="habit-deadline">{{ goal.deadline|date:"M. j, Y" }}</span>
+</div>
 {% endfor %}
+</div>
 {% endblock %}

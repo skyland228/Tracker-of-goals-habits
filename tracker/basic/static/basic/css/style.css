@@ -126,6 +126,7 @@ body {
 
 /* Общие стили списка привычек */
 .habits-list {
+    width: 100%
     max-width: 900px;
     margin: 90px auto;
 }
@@ -175,16 +176,56 @@ body {
 .habit-item.habit-completed .habit-stats{
     opacity: 0.6;
 }
+.full-width {
+    width: 1650% !important;
+    height: 10px !important;
+}
 /* Стиль элемента привычки */
 .habit-item {
     position: relative;  /* Важно! Теперь абсолютные элементы внутри будут привязаны к этому блоку */
     padding: 20px 30px;
+    display: block; /* или flex/grid с правильными настройками */
     margin-bottom: 15px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     transition: all 0.3s ease;
 }
+.habits-list {
+    width: 100%;
+}
 
+.habit-item {
+    display: flex;
+    justify-content: space-between; /* распределяет по краям */
+    align-items: center;           /* выравнивает по вертикали */
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 8px;
+    width: 100%; /* важно! */
+    box-sizing: border-box; /* учитывает padding в ширине */
+}
+
+.habit-programming {
+    background-color: #e3f2fd;
+    border-left: 4px solid #2196f3;
+}
+
+.habit-health {
+    background-color: #f1f8e9;
+    border-left: 4px solid #4caf50;
+}
+
+.habit-title {
+    font-weight: 500;
+    flex-shrink: 0; /* не дает сжиматься */
+}
+
+.habit-deadline {
+    color: #666;
+    font-size: 0.9em;
+    margin-left: auto; /* выталкивает вправо */
+    padding-left: 15px; /* отступ от заголовка */
+}
 .progress-info {
     background: #f8f9fa;
     padding: 25px;
@@ -211,6 +252,7 @@ body {
 
 .progress-bar {
     width: 100%;
+    display: block; /* блочный элемент */
     height: 12px;
     background: #e9ecef;
     border-radius: 6px;
@@ -306,10 +348,15 @@ body {
 .progress-low {
     background: linear-gradient(90deg, #f44336, #ef5350); /* Красный */
 }
+
 /* Цвета для категорий */
 .habit-health {
     background-color: #e8f5e9; /* Мягкий зеленый */
     border-left: 4px solid #4caf50;
+}
+.habit-programming {
+    background-color: #f3e5f5; /* Светло-фиолетовый */
+    border-left: 4px solid #9c27b0;
 }
 .streak-container {
     display: flex;

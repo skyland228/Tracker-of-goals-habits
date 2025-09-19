@@ -6,9 +6,8 @@
     {% with status=habit.statuses.all|dictsort:"date"|last %}
     <!-- Класс habit-completed должен быть на ОСНОВНОМ блоке .habit-item -->
     <div class="habit-item {% if status.is_completed %}habit-completed{% endif %}
-        {% if habit.category.name == 'Здоровье' %}habit-health
-        {% elif habit.category.name == 'Работа' %}habit-work
-        {% elif habit.category.name == 'Учеба' %}habit-study
+        {% if habit.goal.general_goal.theme == 'Здоровье' %}habit-health
+        {% elif habit.goal.general_goal.theme == 'Программирование' %}habit-programming
         {% endif %}">
 
         <!-- Форма для отметки статуса привычки -->
@@ -25,8 +24,7 @@
                     <span class="habit-stats">({{ habit.completed_days }}/{{ habit.total_days }})</span>
                 </div>
 
-                <!-- отображение шкалы прогресса -->
-                <div class="progress-bar">
+                <div class="progress-bar full-width">
                     <div class="progress-fill
                         {% if habit.progress >= 80 %}progress-high
                         {% elif habit.progress >= 50 %}progress-medium
