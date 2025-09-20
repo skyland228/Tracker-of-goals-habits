@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="goal-container {% if goal.general_goal.theme == 'Здоровье' %}health
+{% elif goal.general_goal.theme == 'Программирование' %}programming{% endif %}">
+    <!-- Общая цель -->
+    <div>
+        <div class="goal-title">
+            <h3>Общая цель: {{ general_goal.name }}</h3>
+        </div>
+        <div class="goal-description">
+            <p>{{ general_goal.description }}</p>
+        </div>
+    </div>
+
+    <!-- Привычки для этой общей цели -->
+    <div class="habit-card">
+        <div class="habit-card-header">
+            <h4>Привычки, которые ведут к этой цели</h4>
+        </div>
+        <div class="habit-card-body">
+            {% if habits %}
+                <div class="habit-list-group">
+                    {% for habit in habits %}
+                        <div class="habit-list-group-item">
+                            <h5>{{ habit.name }}</h5>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>Нет привычек для этой цели</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

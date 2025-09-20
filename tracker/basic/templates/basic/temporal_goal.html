@@ -6,6 +6,7 @@
 <div class="habit-item {% if goal.general_goal.theme == 'Программирование' %}habit-programming
 {% elif goal.general_goal.theme == 'Здоровье'%}habit-health
 {% endif %}">
+                <a href="{% url 'temporal_goal_detail' goal.pk %}">
     <span class="habit-title">{{ goal.name }}</span>
     <span class="habit-deadline">{{ goal.deadline|date:"M. j, Y" }}</span>
     <span>
