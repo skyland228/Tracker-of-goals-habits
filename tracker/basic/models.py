@@ -41,14 +41,7 @@ class GeneralGoal(models.Model):
     def __str__(self):
         return self.name
 
-class GeneralStatus(models.Model):
-    goal = models.ForeignKey(GeneralGoal, on_delete=models.CASCADE, related_name='GeneralStuses' )
-    is_completed = models.BooleanField(default=False)
-    date = models.DateField(default = date.today)
 
-    objects = models.Manager()
-    class Meta:
-        unique_together = ('goal', 'date')
 
 class TemporalGoal(models.Model):
     name = models.CharField(max_length=50)
@@ -66,12 +59,3 @@ class TemporalGoal(models.Model):
     def __str__(self):
         return self.name
 
-class TemporalStatus(models.Model):
-    goal = models.ForeignKey(TemporalGoal, on_delete=models.CASCADE, verbose_name='temporalstatus')
-    date = models.DateField(default = date.today)
-    is_completed = models.BooleanField(default=False)
-
-    objects = models.Manager()
-
-    class Meta:
-        unique_together = ('goal','date')

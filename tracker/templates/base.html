@@ -30,11 +30,9 @@
     </header>
     <!-- Боковое меню -->
     <aside class="side-nav">
-        {% if user.is_authenticated %}
         {% for i in side_nav %}
             <a href="{% url i.url_name %}" class="side-link">{{ i.title }}</a>
         {% endfor %}
-        {% endif %}
     </aside>
     <!-- Основной контент -->
     <main class="content">

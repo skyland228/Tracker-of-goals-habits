@@ -8,6 +8,21 @@
 {% endif %}">
     <span class="habit-title">{{ goal.name }}</span>
     <span class="habit-deadline">{{ goal.deadline|date:"M. j, Y" }}</span>
+    <span>
+        <form method="post" action="{% url 'temporal_update' goal.pk %}">
+            {% csrf_token %}
+
+            {% if goal.is_completed %}
+                <button type="submit" class="btn btn-outline-secondary btn-sm">
+                    ❌ Отменить выполнение
+                </button>
+            {% else %}
+                <button type="submit" class="btn btn-outline-success btn-sm">
+                    ✅ Отметить выполненной
+                </button>
+            {% endif %}
+        </form>
+    </span>
 </div>
 {% endfor %}
 </div>

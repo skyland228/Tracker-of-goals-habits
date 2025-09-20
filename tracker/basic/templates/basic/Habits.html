@@ -11,31 +11,42 @@
         {% endif %}">
 
         <!-- Форма для отметки статуса привычки -->
-        <form action="{% url 'habitstatus_update' status.id %}" method="post" style="display:inline;">
-            {% csrf_token %}
+<form action="{% url 'habitstatus_update' habit.today_status.id %}" method="post" style="display:inline;">
+    {% csrf_token %}
 
-            <!-- Весь контент привычки внутри кнопки -->
-            <button type="submit" class="habit-status-btn"
-                    style="border:none; background:none; cursor:pointer; text-align:left; width:100%; padding:10px;">
+    <button type="submit" class="habit-status-btn">
+        <!-- Добавляем классы в зависимости от статуса -->
+        <div class="habit-item {% if habit.today_status.is_completed %}completed{% else %}active{% endif %}">
 
-                <!-- Название и статистика -->
-                <div class="habit-header">
-                    <span class="habit-name">{{ habit.name }}</span>
-                    <span class="habit-stats">({{ habit.completed_days }}/{{ habit.total_days }})</span>
+            <!-- Название и статистика -->
+            <div class="habit-header">
+                <span class="habit-name">{{ habit.name }}</span>
+                <span class="habit-stats">({{ habit.completed_days }}/{{ habit.total_days }})</span>
+            </div>
+
+            <!-- Прогресс-бар -->
+            <div class="progress-bar full-width">
+                <div class="progress-fill
+                    {% if habit.progress >= 80 %}progress-high
+                    {% elif habit.progress >= 50 %}progress-medium
+                    {% else %}progress-low
+                    {% endif %}"
+                    style="width: {{ habit.progress }}%;">
                 </div>
+            </div>
 
-                <div class="progress-bar full-width">
-                    <div class="progress-fill
-                        {% if habit.progress >= 80 %}progress-high
-                        {% elif habit.progress >= 50 %}progress-medium
-                        {% else %}progress-low
-                        {% endif %}"
-                        style="width: {{ habit.progress }}%;">
-                    </div>
-                </div>
+            <!-- Небольшая иконка статуса -->
+            <div class="status-indicator">
+                {% if habit.today_status.is_completed %}
+                    ✅ Выполнено
+                {% else %}
+                    ⏳ Ожидает
+                {% endif %}
+            </div>
 
-            </button>
-        </form>
+        </div>
+    </button>
+</form>
     </div>
     {% endwith %}
     {% endfor %}
