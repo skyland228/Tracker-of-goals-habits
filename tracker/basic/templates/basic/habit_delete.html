@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Удалить привычку?</h2>
+    <div class="card {% if habit.goal.general_goal.theme == 'Здоровье' %}habit-health
+        {% elif habit.goal.general_goal.theme == 'Программирование' %}habit-programming
+        {% endif %}">
+        <div class="card-body">
+            <h5>{{ habit.name }}</h5>
+
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Да, удалить</button>
+                <a href="{% url 'habits' %}" class="btn btn-secondary">Отмена</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        {% if habit.goal.general_goal.theme == 'Здоровье' %}
+            background: linear-gradient(135deg, #f1f8e9 0%, #e8f5e8 100%) !important;
+        {% elif habit.goal.general_goal.theme == 'Программирование' %}
+            background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%) !important;
+        {% endif %}
+        background-attachment: fixed !important;
+    }
+
+
+</style>
+{% endblock %}

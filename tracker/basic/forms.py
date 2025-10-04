@@ -14,3 +14,7 @@ class AddHabit(forms.ModelForm):
         model = Habit
         fields = ['name','goal']
 
+class AddTgoal(forms.ModelForm):
+    class Meta:
+        model = TemporalGoal
+        fields = ['name','deadline','general_goal']

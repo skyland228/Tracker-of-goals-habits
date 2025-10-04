@@ -6,6 +6,7 @@ body {
     background-color: #f5f5f5;
     color: #333;
 }
+
 /* Верхнее меню */
 .header {
     position: relative;
@@ -115,9 +116,10 @@ body {
 .side-link {
     display: block;
     color: #2c3e50;
-    padding: 10px 0;
+    padding: 20px 0;
     text-decoration: none;
     border-bottom: 1px solid #eee;
+    font-size: 18px; /* Добавьте эту строку */
 }
 
 .side-link:hover {
@@ -183,9 +185,9 @@ body {
 /* Стиль элемента привычки */
 .habit-item {
     position: relative;  /* Важно! Теперь абсолютные элементы внутри будут привязаны к этому блоку */
-    padding: 20px 30px;
+    padding: 20px 40px;
     display: block; /* или flex/grid с правильными настройками */
-    margin-bottom: 15px;
+    margin-bottom: 25px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     transition: all 0.3s ease;
@@ -233,31 +235,12 @@ body {
     margin: 20px 0;
 }
 
-.progress-item {
-    margin: 25px 0;
-}
-
-.progress-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-    font-size: 16px;
-}
 
 .numbers {
     color: #28a745;
     font-size: 16px;
 }
 
-.progress-bar {
-    width: 100%;
-    display: block; /* блочный элемент */
-    height: 12px;
-    background: #e9ecef;
-    border-radius: 6px;
-    overflow: hidden;
-}
 .habit-item.completed .habit-name,
 .habit-item.completed .habit-stats {
     color: #6c757d;
@@ -286,66 +269,6 @@ body {
     position: relative;
 }
 
-/* Цвета для разных уровней прогресса */
-.progress-red {
-    background: linear-gradient(90deg, #dc3545, #e35d6a);
-}
-
-.progress-orange {
-    background: linear-gradient(90deg, #fd7e14, #ff9b40);
-}
-
-.progress-lightgreen {
-    background: linear-gradient(90deg, #20c997, #3dd4ac);
-}
-
-.progress-green {
-    background: linear-gradient(90deg, #28a745, #4bc05c);
-}
-
-.progress-darkgreen {
-    background: linear-gradient(90deg, #1e7e34, #2ca04e);
-}
-
-/* Полоски для красоты (опционально) */
-.progress-fill::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    background-image: linear-gradient(
-        -45deg,
-        rgba(255, 255, 255, 0.2) 25%,
-        transparent 25%,
-        transparent 50%,
-        rgba(255, 255, 255, 0.2) 50%,
-        rgba(255, 255, 255, 0.2) 75%,
-        transparent 75%,
-        transparent
-    );
-    background-size: 20px 20px;
-}
-.progress-bar {
-    width: 100%;
-    height: 8px;
-    background: #e0e0e0;
-    border-radius: 4px;
-    overflow: hidden;
-}
-
-/* Заполненная часть */
-.progress-fill {
-    height: 100%;
-    border-radius: 4px;
-    transition: width 0.5s ease;
-}
-
-/* Цвета через отдельные классы */
-.progress-high {
-    background: linear-gradient(90deg, #4caf50, #66bb6a); /* Зеленый */
-}
 /* Стили для ссылки "Добавить привычку" */
 .add-habit-link {
     display: inline-block;
@@ -504,6 +427,7 @@ body {
     min-height: calc(100vh - 60px); /* 100% высоты минус шапка */
     background: #f8f9fa; /* Фон для контента */
 }
+
 .centered-content {
     margin-left: px; /* Ширина бокового меню + отступ */
     margin-top: 0px; /* Высота верхнего меню + отступ */

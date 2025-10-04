@@ -80,8 +80,12 @@ WSGI_APPLICATION = 'tracker.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'tracker_db',
+        'USER': 'skyland',
+        'PASSWORD': '810552400',
+        'HOST': 'localhost',
+        'PORT': 5432,
     }
 }
 
