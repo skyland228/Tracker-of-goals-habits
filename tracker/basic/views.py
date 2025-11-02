@@ -11,40 +11,10 @@ from django.views.generic import ListView, DetailView, TemplateView, UpdateView,
 from .forms import HabitStatusForm, AddHabit, AddTgoal
 from .models import Habit, GeneralGoal, TemporalGoal, HabitStatus
 from django.utils import timezone
+from .service.habit_service import HabitService
 
-def get_habits_with_stats(request):
-    # 1. Получаем привычки пользователя
-    today = date.today()
-    habits_with_stats = []
-    if request.user.is_authenticated:
-        habits = Habit.objects.filter(user=request.user)
-
-        # 2. Для каждой привычки создаём недостающие статусы
-        for habit in habits:
-            start_date = habit.created_at
-            current_date = start_date
-
-            while current_date <= today:
-                HabitStatus.objects.get_or_create(
-                    habit=habit,
-                    date=current_date,
-                    defaults={'is_completed': False}
-                )
-                current_date += timedelta(days=1)
-
-        # 3. Теперь аннотируем с готовыми статусами
-        habits_with_stats = habits.annotate(
-            total_days=Count('habit_statuses'),
-            completed_days=Count('habit_statuses', filter=Q(habit_statuses__is_completed=True))
-        )
-
-        # 4. Добавляем прогресс для каждой привычки
-        for habit in habits_with_stats:
-            habit.progress = (habit.completed_days / habit.total_days * 100) if habit.total_days > 0 else 0
-        return habits_with_stats, today
 
 def home(request):
-    get_habits_with_stats(request)
     return render(request, 'basic/home.html', )
 
 class Profile(TemplateView):
@@ -177,31 +147,40 @@ class UpdateTemporalGoal(LoginRequiredMixin, UpdateView):
         return TemporalGoal.objects.filter(user=self.request.user)
 
 
-class Habits(LoginRequiredMixin,ListView):
+class Habits(LoginRequiredMixin, ListView):
     model = Habit
     template_name = 'basic/Habits.html'
     context_object_name = 'habits'
     paginate_by = 5
     login_url = 'users:login'
+
     def get_queryset(self):
-        today = date.today()
-        user_habits = Habit.objects.filter(user=self.request.user)
-        for habit in user_habits:
-            HabitStatus.objects.get_or_create(habit=habit, date=today)
-        habits = user_habits.prefetch_related('habit_statuses').annotate(
-            total_days = Count('habit_statuses'),
-            completed_days=Count('habit_statuses',filter=(Q(habit_statuses__is_completed=True))))
-        for habit in habits:
-            habit.progress = (habit.completed_days / habit.total_days * 100) if habit.total_days > 0 else 0
+        habits_data = HabitService.get_user_habits_with_progress(self.request.user)
+
+        # Добавляем прогресс и превращаем в объекты
+        habits = []
+        for item in habits_data:
+            habit = item['habit']
+            habit.total_days = item['total_days']
+            habit.completed_days = item['completed_days']
+            habit.progress = (item['completed_days'] / item['total_days'] * 100) if item['total_days'] > 0 else 0
+            habits.append(habit)
+
         return habits
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         today = date.today()
 
-        # Добавляем текущий статус для каждой привычки
         for habit in context['habits']:
             habit.today_status = habit.habit_statuses.filter(date=today).first()
+            # Если статуса нет - создаем
+            if not habit.today_status:
+                habit.today_status = HabitStatus.objects.create(
+                    habit=habit,
+                    date=today,
+                    is_completed=False
+                )
 
         return context
 
