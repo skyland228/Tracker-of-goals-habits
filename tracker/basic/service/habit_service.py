@@ -3,7 +3,6 @@ from django.core.cache import cache
 from django.utils import timezone
 from ..models import Habit, HabitStatus
 
-
 class HabitService:
     @staticmethod
     def get_user_habits_with_progress(user, date=None):

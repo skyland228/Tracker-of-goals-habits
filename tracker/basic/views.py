@@ -11,6 +11,7 @@ from django.views.generic import ListView, DetailView, TemplateView, UpdateView,
 from .forms import HabitStatusForm, AddHabit, AddTgoal
 from .models import Habit, GeneralGoal, TemporalGoal, HabitStatus
 from django.utils import timezone
+from .service.general_service import StatsService
 from .service.habit_service import HabitService
 
 
@@ -19,49 +20,17 @@ def home(request):
 
 class Profile(TemplateView):
     template_name = 'basic/profile.html'
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['user'] = self.request.user  # Добавляем пользователя в контекст
-        user = self.request.user #получаем нашего пользователя и в переменную
-        today = timezone.now().date() # Определяем сегодняшнюю дату
-        # ВСЕГДА пересчитываем streak из истории
-        streak = self.calculate_streak_simple(user)
-
-        # Обновляем значение в базе
-        user.streak = streak
-        user.save()
-        today_statuses = HabitStatus.objects.filter( # получаем статус выполнения за сегодня
-            habit__user=user,  # статусы привычек этого пользователя
-            date=today         # только за сегодня
-        )
-
-        today_completed = today_statuses.filter(is_completed=True).count() # считаем сколько выполнено за сегодня
-        today_total = today_statuses.count() # считаем сколько вообще задач за сегодня
-        all_statuses = HabitStatus.objects.filter(habit__user=user) # считаем все статусы определенного пользователя
-        total_completed = all_statuses.filter(is_completed=True).count() # общее кол-во выполненных задач
-        total_all = all_statuses.count() # считаем общее кол-во задач
-        today_percentage = round((today_completed / today_total * 100)) if today_total > 0 else 0 # высчитываем процент этого дня
-        total_percentage = round((total_completed / total_all * 100)) if total_all > 0 else 0 # высчитываем процент вообще
-
-        # Добавляем в контекст
-        context['today_progress'] = {
-            'completed': today_completed,
-            'total': today_total,
-            'text': f"{today_completed}/{today_total}",
-            'percentage': today_percentage,
-            'width': today_percentage  # для ширины прогресс-бара
-        }
-
-        context['total_progress'] = {
-            'completed': total_completed,
-            'total': total_all,
-            'text': f"{total_completed}/{total_all}",
-            'percentage': total_percentage,
-            'width': total_percentage  # для ширины прогресс-бара
-        }
-        context['streak'] = user.streak
+        stats = StatsService.get_all_user_stats(self.request.user)
+        context.update({
+            'user': self.request.user,
+            'today_progress': stats['today_progress'],
+            # 'total_progress': stats['total_progress'],  # потом раскомментируешь
+            # 'streak': stats['streak']  # потом раскомментируешь
+        })
         return context
+
 
     def calculate_streak_simple(self, user):
         dates = HabitStatus.objects.filter(habit__user=user) \
@@ -139,7 +108,7 @@ class DeleteTemporalGoal(LoginRequiredMixin,DeleteView):
     template_name = 'basic/temporal_goal_delete.html'
 
 class UpdateTemporalGoal(LoginRequiredMixin, UpdateView):
-    mdoel = TemporalGoal
+    model = TemporalGoal
     success_url = reverse_lazy('temporal_goals')
     template_name = 'basic/add_temporal_goal.html'
     fields = ['name','general_goal','deadline']
@@ -215,7 +184,6 @@ class TemporalGoals(LoginRequiredMixin,ListView):
 class TemporalGoalCheck(LoginRequiredMixin, View):
     def post(self,request,pk):
         goal = get_object_or_404(TemporalGoal,pk = pk, user=request.user)
-
         goal.is_completed = not goal.is_completed
         goal.save()
         return redirect('temporal_goals')
