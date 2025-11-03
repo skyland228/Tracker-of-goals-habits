@@ -26,7 +26,7 @@ class Profile(TemplateView):
         context.update({
             'user': self.request.user,
             'today_progress': stats['today_progress'],
-            # 'total_progress': stats['total_progress'],  # потом раскомментируешь
+            'total_progress': stats['total_progress'],  # потом раскомментируешь
             # 'streak': stats['streak']  # потом раскомментируешь
         })
         return context

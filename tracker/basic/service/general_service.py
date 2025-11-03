@@ -13,6 +13,7 @@ class StatsService:
             total_completed = Count('id', filter = Q(is_completed = True)),)# выполненные вообще
         return {
             'today_progress': StatsFormatter.format_today(stats),
+            'total_progress': StatsFormatter.format_total(stats),
         }
 
 class StatsFormatter:
@@ -26,7 +27,17 @@ class StatsFormatter:
             'total': total,
             'percentage': percentage,
             'text': f"{completed}/{total}"}
-
+    @staticmethod
+    def format_total(stats):
+        completed = stats['total_completed'] or 0
+        total = stats['total_all'] or 0
+        percentage = round((completed / total) * 100) if total > 0 else 0
+        return {
+            'completed': completed,
+            'total': total,
+            'percentage': percentage,
+            'text': f"{completed}/{total}"
+        }
 # class ProfileService:
 #     @staticmethod
 #     def get_today_progress(user):
