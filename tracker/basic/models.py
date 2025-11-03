@@ -9,7 +9,7 @@ class Habit(models.Model):
     created_at = models.DateField(auto_now_add=True)
     goal = models.ForeignKey('TemporalGoal',on_delete=models.SET_NULL,
                              related_name='habits', null = True, blank = True,
-                             verbose_name='Цель,') # мы записываем, какой цели следует эта привычка
+                             verbose_name='Цель') # мы записываем, какой цели следует эта привычка
 
     objects = models.Manager()
 

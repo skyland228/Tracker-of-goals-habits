@@ -4,6 +4,39 @@ from ..models import HabitStatus
 
 class StatsService:
     @staticmethod
+    def calculate_streak_simple(user):
+        dates = HabitStatus.objects.filter(habit__user=user) \
+            .values_list('date', flat=True).distinct().order_by('-date') # получаем наши статусы за дни
+        all_statuses = HabitStatus.objects.filter(
+            habit__user=user,
+            date__in=dates  # все интересующие нас даты
+        ).values('date').annotate(
+            total=Count('id'),
+            completed=Count('id', filter=Q(is_completed=True)))
+        current_date = timezone.now().date() # получаем текущию дату
+        streak = 0
+        stats_by_date = {item['date']: item for item in all_statuses}
+        for data in dates:
+            stats = stats_by_date.get(data, {'total': 0, 'completed': 0})
+            total = stats['total']
+            completed = stats['completed']
+            if data == current_date: # Если дата = сегодня
+                if total > 0 and total == completed: # если все привычки сегодня уже выполнены
+                    streak += 1
+                    current_date -= timezone.timedelta(days=1) # это был сегодня все сделали значит день минус
+                else: # Сегодня ещё не всё сделано → streak не ломаем
+                    continue
+            elif data == current_date - timezone.timedelta(days=1):  # проверка на последовательные дни
+                if total > 0 and total == completed:
+                    streak += 1
+                    current_date -= timezone.timedelta(days=1)
+                else:
+                    break
+            else:
+                break # ну если последовательности нет то рвем стрик
+        return streak
+
+    @staticmethod
     def get_all_user_stats(user):
         today = timezone.now().date()
         stats = HabitStatus.objects.filter(habit__user = user).aggregate( # получаем данные одним запросом
@@ -11,10 +44,11 @@ class StatsService:
             today_completed = Count('id', filter = Q(date=today, is_completed = True)), # Выполненные сегодня
             total_all = Count('id'), # общее кол-во вообще
             total_completed = Count('id', filter = Q(is_completed = True)),)# выполненные вообще
+        streak = StatsService.calculate_streak_simple(user)
         return {
             'today_progress': StatsFormatter.format_today(stats),
             'total_progress': StatsFormatter.format_total(stats),
-        }
+            'streak': streak }
 
 class StatsFormatter:
     @staticmethod
@@ -38,53 +72,3 @@ class StatsFormatter:
             'percentage': percentage,
             'text': f"{completed}/{total}"
         }
-# class ProfileService:
-#     @staticmethod
-#     def get_today_progress(user):
-#         today = timezone.now().date()
-#         today_statuses = HabitStatus.objects.filter(#  мы получаем статус на сегодня по нашему пользователю
-#             habit_user = user,
-#             date = today,
-#         )
-
-    # def get_context_data(self, **kwargs):
-    # context = super().get_context_data(**kwargs)
-    # context['user'] = self.request.user  # Добавляем пользователя в контекст
-    # user = self.request.user #получаем нашего пользователя и в переменную
-    # today = timezone.now().date() # Определяем сегодняшнюю дату
-    # # ВСЕГДА пересчитываем streak из истории
-    # streak = self.calculate_streak_simple(user)
-    #
-    # # Обновляем значение в базе
-    # user.streak = streak
-    # user.save()
-    # today_statuses = HabitStatus.objects.filter( # получаем статус выполнения за сегодня
-    #     habit__user=user,  # статусы привычек этого пользователя
-    #     date=today         # только за сегодня
-    # )
-    #     today_completed = today_statuses.filter(is_completed=True).count() # считаем сколько выполнено за сегодня
-    #     today_total = today_statuses.count() # считаем сколько вообще задач за сегодня
-    #     all_statuses = HabitStatus.objects.filter(habit__user=user) # считаем все статусы определенного пользователя
-    #     total_completed = all_statuses.filter(is_completed=True).count() # общее кол-во выполненных задач
-    #     total_all = all_statuses.count() # считаем общее кол-во задач
-    # today_percentage = round((today_completed / today_total * 100)) if today_total > 0 else 0 # высчитываем процент этого дня
-    # total_percentage = round((total_completed / total_all * 100)) if total_all > 0 else 0 # высчитываем процент вообще
-    #
-    # # Добавляем в контекст
-    # context['today_progress'] = {
-    #     'completed': today_completed,
-    #     'total': today_total,
-    #     'text': f"{today_completed}/{today_total}",
-    #     'percentage': today_percentage,
-    #     'width': today_percentage  # для ширины прогресс-бара
-    # }
-    #
-    # context['total_progress'] = {
-    #     'completed': total_completed,
-    #     'total': total_all,
-    #     'text': f"{total_completed}/{total_all}",
-    #     'percentage': total_percentage,
-    #     'width': total_percentage  # для ширины прогресс-бара
-    # }
-    # context['streak'] = user.streak
-    # return context

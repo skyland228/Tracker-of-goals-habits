@@ -14,7 +14,6 @@ from django.utils import timezone
 from .service.general_service import StatsService
 from .service.habit_service import HabitService
 
-
 def home(request):
     return render(request, 'basic/home.html', )
 
@@ -26,53 +25,15 @@ class Profile(TemplateView):
         context.update({
             'user': self.request.user,
             'today_progress': stats['today_progress'],
-            'total_progress': stats['total_progress'],  # потом раскомментируешь
-            # 'streak': stats['streak']  # потом раскомментируешь
-        })
+            'total_progress': stats['total_progress'],
+            'streak': stats['streak']})
         return context
-
-
-    def calculate_streak_simple(self, user):
-        dates = HabitStatus.objects.filter(habit__user=user) \
-            .values_list('date', flat=True).distinct().order_by('-date')
-        current_date = timezone.now().date()
-        streak = 0
-
-        for data in dates:
-            if isinstance(data, datetime):
-                data = data.date()
-
-            day_statuses = HabitStatus.objects.filter(habit__user=user, date=data)
-            total = day_statuses.count()
-            completed = day_statuses.filter(is_completed=True).count()
-
-            # Если дата = сегодня
-            if data == current_date:
-                if total > 0 and total == completed:
-                    streak += 1
-                    current_date -= timezone.timedelta(days=1)
-                else:
-                    # Сегодня ещё не всё сделано → streak не ломаем
-                    continue
-
-            elif data == current_date - timezone.timedelta(days=1):
-                if total > 0 and total == completed:
-                    streak += 1
-                    current_date -= timezone.timedelta(days=1)
-                else:
-                    break
-
-            else:
-                # если дата "прыгает" через день или раньше → streak рвётся
-                break
-        return streak
 
 class AddHabits(CreateView):
     model = Habit
     template_name = 'basic/add_habit.html'
     success_url = reverse_lazy('habits')
     form_class = AddHabit
-
     def form_valid(self, form):
         form.instance.user = self.request.user  #устанавливаем пользователя
         return super().form_valid(form)
