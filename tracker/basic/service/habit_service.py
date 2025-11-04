@@ -53,3 +53,52 @@ class HabitService:
 
         cache.set(cache_key, True, 86400)
         return habits_with_stats
+
+    @staticmethod
+    def get_habits_with_today_status(user, today):
+        habits = Habit.objects.filter(user=user) # получаем привычки нашего пользователя
+        habit_ids = [habit.id for habit in habits] # вычисляем все id наших привычек
+        today_statuses = HabitStatus.objects.filter(
+            habit_id__in=habit_ids,
+            date=today) # получаем сегодняшний статус для привычек
+        status_by_habit_id = {status.habit_id: status for status in today_statuses} # создаем словарь
+        # где каждой нашей привычки соответствует id
+        statuses_to_create = []
+        for habit in habits:
+            if habit.id not in status_by_habit_id:
+                new_status = HabitStatus(habit = habit, date=today, is_completed=False)
+                statuses_to_create.append(new_status)
+                habit.today_status = new_status
+            else:
+                habit.today_status = status_by_habit_id.get(habit.id) # ну и получаем статус для каждой привычки
+        if statuses_to_create:
+            HabitStatus.objects.bulk_create(statuses_to_create)
+        return habits
+
+    @staticmethod
+    def get_user_habits_with_full_stats(user, date=None):
+        if date is None:
+            date = timezone.now().date()
+
+        # 1. Получаем привычки с today_status
+        habits = HabitService.get_habits_with_today_status(user, date)
+
+        # 2. Получаем статистику прогресса
+        habits_data = HabitService.get_user_habits_with_progress(user, date)
+
+        # 3. Создаем словарь для быстрого доступа к статистике
+        stats_by_habit_id = {}
+        for item in habits_data:
+            stats_by_habit_id[item['habit'].id] = {
+                'total_days': item['total_days'],
+                'completed_days': item['completed_days']
+            }
+
+        # 4. Добавляем статистику к существующим habits
+        for habit in habits:
+            stats = stats_by_habit_id.get(habit.id, {'total_days': 0, 'completed_days': 0})
+            habit.total_days = stats['total_days']
+            habit.completed_days = stats['completed_days']
+            habit.progress = (stats['completed_days'] / stats['total_days'] * 100) if stats['total_days'] > 0 else 0
+
+        return habits

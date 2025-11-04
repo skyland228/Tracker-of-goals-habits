@@ -76,8 +76,7 @@ class UpdateTemporalGoal(LoginRequiredMixin, UpdateView):
     def get_queryset(self):
         return TemporalGoal.objects.filter(user=self.request.user)
 
-
-class Habits(LoginRequiredMixin, ListView):
+class Habits(LoginRequiredMixin, ListView):  # вот это God Method
     model = Habit
     template_name = 'basic/Habits.html'
     context_object_name = 'habits'
@@ -85,34 +84,8 @@ class Habits(LoginRequiredMixin, ListView):
     login_url = 'users:login'
 
     def get_queryset(self):
-        habits_data = HabitService.get_user_habits_with_progress(self.request.user)
+        return HabitService.get_user_habits_with_full_stats(self.request.user)
 
-        # Добавляем прогресс и превращаем в объекты
-        habits = []
-        for item in habits_data:
-            habit = item['habit']
-            habit.total_days = item['total_days']
-            habit.completed_days = item['completed_days']
-            habit.progress = (item['completed_days'] / item['total_days'] * 100) if item['total_days'] > 0 else 0
-            habits.append(habit)
-
-        return habits
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        today = date.today()
-
-        for habit in context['habits']:
-            habit.today_status = habit.habit_statuses.filter(date=today).first()
-            # Если статуса нет - создаем
-            if not habit.today_status:
-                habit.today_status = HabitStatus.objects.create(
-                    habit=habit,
-                    date=today,
-                    is_completed=False
-                )
-
-        return context
 
 
 class HabitStatusUpdateView(UpdateView):
@@ -149,7 +122,7 @@ class TemporalGoalCheck(LoginRequiredMixin, View):
         goal.save()
         return redirect('temporal_goals')
 
-class TemporalGoalDetail(LoginRequiredMixin, DetailView):
+class TemporalGoalDetail(LoginRequiredMixin, DetailView): # вот это God Method
     model = TemporalGoal
     template_name = 'basic/temporal_goal_detail.html'
     context_object_name = 'goal'
@@ -170,9 +143,7 @@ class TemporalGoalDetail(LoginRequiredMixin, DetailView):
             goal__general_goal=general_goal,  # Привычки, связанные с временными целями этой общей цели
             user=self.request.user  # Только привычки текущего пользователя
         ).select_related('goal')  # Оптимизация запросов
-
         # Добавляем в контекст
         context['general_goal'] = general_goal
         context['habits'] = habits
-
         return context
