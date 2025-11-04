@@ -13,6 +13,7 @@ from .models import Habit, GeneralGoal, TemporalGoal, HabitStatus
 from django.utils import timezone
 from .service.general_service import StatsService
 from .service.habit_service import HabitService
+from .service.goal_service import GoalService
 
 def home(request):
     return render(request, 'basic/home.html', )
@@ -76,7 +77,7 @@ class UpdateTemporalGoal(LoginRequiredMixin, UpdateView):
     def get_queryset(self):
         return TemporalGoal.objects.filter(user=self.request.user)
 
-class Habits(LoginRequiredMixin, ListView):  # вот это God Method
+class Habits(LoginRequiredMixin, ListView):
     model = Habit
     template_name = 'basic/Habits.html'
     context_object_name = 'habits'
@@ -85,8 +86,6 @@ class Habits(LoginRequiredMixin, ListView):  # вот это God Method
 
     def get_queryset(self):
         return HabitService.get_user_habits_with_full_stats(self.request.user)
-
-
 
 class HabitStatusUpdateView(UpdateView):
     model = HabitStatus
@@ -128,22 +127,14 @@ class TemporalGoalDetail(LoginRequiredMixin, DetailView): # вот это God Me
     context_object_name = 'goal'
 
     def get_queryset(self):
-        # Только цели текущего пользователя
-        return TemporalGoal.objects.filter(user=self.request.user)
+        return TemporalGoal.objects.filter(user=self.request.user) # Только цели текущего пользователя
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         temporal_goal = self.object  # Это наша временная цель
-
-        # Получаем общую цель
-        general_goal = temporal_goal.general_goal
-
-        # ★ ПРАВИЛЬНО: получаем все привычки через временные цели этой общей цели ★
-        habits = Habit.objects.filter(
-            goal__general_goal=general_goal,  # Привычки, связанные с временными целями этой общей цели
-            user=self.request.user  # Только привычки текущего пользователя
-        ).select_related('goal')  # Оптимизация запросов
-        # Добавляем в контекст
+        general_goal, habits = GoalService.depend_goal(
+            temporal_goal=self.object,
+            user=self.request.user)
         context['general_goal'] = general_goal
         context['habits'] = habits
         return context
