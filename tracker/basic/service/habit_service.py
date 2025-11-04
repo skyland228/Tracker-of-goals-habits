@@ -102,3 +102,7 @@ class HabitService:
             habit.progress = (stats['completed_days'] / stats['total_days'] * 100) if stats['total_days'] > 0 else 0
 
         return habits
+    @staticmethod
+    def toggle_status(status):
+        status.is_completed = not status.is_completed
+        status.save()

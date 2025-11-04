@@ -90,12 +90,9 @@ class Habits(LoginRequiredMixin, ListView):
 class HabitStatusUpdateView(UpdateView):
     model = HabitStatus
     form_class = HabitStatusForm
-
     def form_valid(self, form):
-        # Получаем текущий объект из базы, а не из формы
-        status = self.get_object()
-        status.is_completed = not status.is_completed
-        status.save()
+        status = self.get_object()  # Получаем текущий объект из базы, а не из формы
+        HabitService.toggle_status(status)
         return redirect('habits')
 
 class GeneralGoals(LoginRequiredMixin,ListView):
@@ -117,18 +114,15 @@ class TemporalGoals(LoginRequiredMixin,ListView):
 class TemporalGoalCheck(LoginRequiredMixin, View):
     def post(self,request,pk):
         goal = get_object_or_404(TemporalGoal,pk = pk, user=request.user)
-        goal.is_completed = not goal.is_completed
-        goal.save()
+        GoalService.toggle_goal_completion(goal)
         return redirect('temporal_goals')
 
 class TemporalGoalDetail(LoginRequiredMixin, DetailView): # вот это God Method
     model = TemporalGoal
     template_name = 'basic/temporal_goal_detail.html'
     context_object_name = 'goal'
-
     def get_queryset(self):
         return TemporalGoal.objects.filter(user=self.request.user) # Только цели текущего пользователя
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         temporal_goal = self.object  # Это наша временная цель
