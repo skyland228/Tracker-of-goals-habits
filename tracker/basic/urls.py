@@ -25,4 +25,5 @@ urlpatterns = [
     path('general_goal/<int:pk>/delete/',views.GeneralGoalDelete.as_view(), name='delete_general_goal'),
     path('general_goal/<int:pk>/update/', views.GeneralGoalUpdate.as_view(), name='general_goal_update'),
     path('general_goal/<int:pk>/detail/',views.GeneralGoalDetail.as_view(), name='general_goals_detail'),
+    path('theme/create/',views.CreateTheme.as_view(), name='theme_create'),
 ]

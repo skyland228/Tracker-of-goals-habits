@@ -2,7 +2,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+tracker/basic/migrations/
 # C extensions
 *.so
 
@@ -107,9 +107,7 @@ media/
 *.db
 *.pid
 .idea/
-# Ignore Django Migrations in Development if you are working on team
 
-# Only for Development only
-# **/migrations/**
-# !**/migrations
-# !**/migrations/__init__.py
+migrations/
+migrations
+migrations/__init__.py

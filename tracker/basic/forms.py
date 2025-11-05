@@ -1,5 +1,5 @@
 from django import forms
-from .models import HabitStatus, Habit, TemporalGoal, GeneralGoal
+from .models import HabitStatus, Habit, TemporalGoal, GeneralGoal, Theme
 
 
 class HabitStatusForm(forms.ModelForm):
@@ -23,4 +23,12 @@ class AddGeneralGoal(forms.ModelForm):
         fields = ['name', 'description', 'theme']
         widgets = {
             'theme': forms.Select(attrs={'class': 'form-control'}),
+        }
+
+class CreateTheme(forms.ModelForm):
+    class Meta:
+        model = Theme
+        fields = ['name', 'color']
+        widgets = {
+            'color': forms.TextInput(attrs={'type': 'color'})
         }

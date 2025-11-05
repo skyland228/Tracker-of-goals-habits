@@ -252,7 +252,18 @@ body {
     width: 100%;
     padding: 0;
 }
+.sidebar-admin {
+    margin-top: auto; /* прижимает к низу */
+    padding-top: 15rem;
+    border-top: 1px solid #dee2e6;
+}
 
+.admin-link {
+    display: block;
+    padding: 0.5rem;
+    color: #6c757d;
+    text-decoration: none;
+}
 .habit-status-btn:hover .habit-item.active {
     border-color: #007bff;
     transform: translateY(-1px);

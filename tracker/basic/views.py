@@ -9,8 +9,8 @@ from django.urls import reverse_lazy, reverse
 from django.views import View
 from django.views.generic import ListView, DetailView, TemplateView, UpdateView, CreateView, DeleteView
 from .Mixin import UserObjectsMixin
-from .forms import HabitStatusForm, AddHabit, AddTgoal, AddGeneralGoal
-from .models import Habit, GeneralGoal, TemporalGoal, HabitStatus
+from .forms import HabitStatusForm, AddHabit, AddTgoal, AddGeneralGoal, CreateTheme
+from .models import Habit, GeneralGoal, TemporalGoal, HabitStatus, Theme
 from django.utils import timezone
 from .service.general_service import StatsService
 from .service.habit_service import HabitService
@@ -66,7 +66,7 @@ class Habits(LoginRequiredMixin, ListView):
     model = Habit
     template_name = 'basic/habit/Habits.html'
     context_object_name = 'habits'
-    paginate_by = 5
+    paginate_by = 3
     login_url = 'users:login'
 
     def get_queryset(self):
@@ -85,6 +85,7 @@ class TemporalGoals(UserObjectsMixin,LoginRequiredMixin,ListView):
     template_name = 'basic/temporal_goal_htmls/temporal_goal.html'
     context_object_name = 'goals'
     login_url = 'users:login'
+    paginate_by = 3
 
 class TemporalGoalCheck(LoginRequiredMixin, View):
     def post(self,request,pk):
@@ -119,6 +120,7 @@ class GeneralGoals(UserObjectsMixin,LoginRequiredMixin,ListView):
     template_name = 'basic/general_goal/general_goals.html'
     context_object_name = 'goals'
     login_url = 'users:login'
+    paginate_by = 3
 
 class GeneralGoalAdd(LoginRequiredMixin, CreateView):
     model = GeneralGoal
@@ -149,4 +151,10 @@ class GeneralGoalCheck(LoginRequiredMixin, View):
     pass
 
 class CreateTheme(LoginRequiredMixin, CreateView):
-    pass
+    model = Theme
+    template_name = 'basic/core/theme.html'
+    form_class = CreateTheme
+    success_url = reverse_lazy('home')
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)

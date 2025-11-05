@@ -34,6 +34,13 @@
         {% for i in side_nav %}
             <a href="{% url i.url_name %}" class="side-link">{{ i.title }}</a>
         {% endfor %}
+        {% if user.is_superuser %}
+            <div class="sidebar-admin">
+                <a href="{% url 'theme_create' %}" class="admin-link">
+                    + Новая тема
+                </a>
+            </div>
+        {% endif %}
     </aside>
     <!-- Основной контент -->
     <main class="content">

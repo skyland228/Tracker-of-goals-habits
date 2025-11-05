@@ -1,31 +1,26 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="habits-list">
+<div>
     
     {% for habit in habits %}
     {% with status=habit.statuses.all|dictsort:"date"|last %}
-    <!-- Класс habit-completed должен быть на ОСНОВНОМ блоке .habit-item -->
-    <div class="habit-item {% if status.is_completed %}habit-completed{% endif %}
-        {% if habit.goal.general_goal.theme.name == 'health' %}habit-health
-        {% elif habit.goal.general_goal.theme.name == 'programming' %}habit-programming
-        {% elif habit.goal.general_goal.theme.name == 'mathematics' %}habit-mathematics
-        {% elif habit.goal.general_goal.theme.name == 'study' %}habit-study
-        {% endif %}">
-        <!-- Название и статистика -->
+    <!-- Динамические цвета из БД -->
+    <div class="habit-item {% if status.is_completed %}habit-completed{% endif %}"
+         style="background-color: {{ habit.goal.general_goal.theme.color }}40; border-left: 4px solid {{ habit.goal.general_goal.theme.color }}">
 
+        <!-- Название и статистика -->
         <div>
-            <span class="habit-name">{{ habit.name }}</span>
+            <span class="habit-name" style="color: {{ habit.goal.general_goal.theme.color }}">{{ habit.name }}</span>
             <span class="habit-stats">({{ habit.completed_days }}/{{ habit.total_days }})</span>
         </div>
+
         <!-- Форма для отметки статуса привычки -->
+        {% if habit.today_status %}
         <form action="{% url 'habitstatus_update' habit.today_status.id %}" method="post" style="display:inline;">
             {% csrf_token %}
-
             <button type="submit" class="habit-status-btn">
-                <!-- Добавляем классы в зависимости от статуса -->
                 <div class="habit-item {% if habit.today_status.is_completed %}completed{% else %}active{% endif %}">
-                    <!-- Небольшая иконка статуса -->
                     <div class="status-indicator">
                         {% if habit.today_status.is_completed %}
                             ✅ Выполнено
@@ -36,8 +31,10 @@
                 </div>
             </button>
         </form>
+        {% endif %}
+
         <a href="{% url 'update_habit' habit.pk %}" class="btn btn-outline-secondary">Редактировать</a>
-        <a href="{% url 'delete_habit' habit.pk %}" class="btn" style="background-color: #f8d7da; color: #721c24; border-color: #f1b0b7;">Удалить</a>
+        <a href="{% url 'delete_habit' habit.pk %}" class="btn btn-outline-danger">Удалить</a>
     </div>
     {% endwith %}
     {% endfor %}
@@ -55,5 +52,6 @@
   {% endif %}
 </div>
 {% endif %}
+
 <a href="{% url 'add_habit' %}" class="btn btn-outline-secondary">Создать привычку</a>
 {% endblock %}
