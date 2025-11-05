@@ -7,8 +7,10 @@
     {% with status=habit.statuses.all|dictsort:"date"|last %}
     <!-- Класс habit-completed должен быть на ОСНОВНОМ блоке .habit-item -->
     <div class="habit-item {% if status.is_completed %}habit-completed{% endif %}
-        {% if habit.goal.general_goal.theme == 'Здоровье' %}habit-health
-        {% elif habit.goal.general_goal.theme == 'Программирование' %}habit-programming
+        {% if habit.goal.general_goal.theme.name == 'health' %}habit-health
+        {% elif habit.goal.general_goal.theme.name == 'programming' %}habit-programming
+        {% elif habit.goal.general_goal.theme.name == 'mathematics' %}habit-mathematics
+        {% elif habit.goal.general_goal.theme.name == 'study' %}habit-study
         {% endif %}">
         <!-- Название и статистика -->
 

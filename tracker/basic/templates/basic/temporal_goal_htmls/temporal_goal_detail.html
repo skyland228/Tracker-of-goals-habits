@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="goal-container {% if goal.general_goal.theme == 'Здоровье' %}health
-{% elif goal.general_goal.theme == 'Программирование' %}programming{% endif %}">
+<div class="goal-container {% if goal.general_goal.theme.name == 'health' %}habit-health
+{% elif goal.general_goal.theme.name == 'programming' %}habit-programming{% endif %}">
     <!-- Общая цель -->
     <div>
         <div class="goal-title">

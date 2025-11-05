@@ -21,4 +21,8 @@ urlpatterns = [
     path('temporal-goal/<int:pk>/delete/', views.DeleteTemporalGoal.as_view(), name='delete_temporal_goal'),
     # {% endblock %}
     path('general_goals/', views.GeneralGoals.as_view(), name = 'general_goals'),
+    path('general_goal/add/', views.GeneralGoalAdd.as_view(), name='general_goals_add'),
+    path('general_goal/<int:pk>/delete/',views.GeneralGoalDelete.as_view(), name='delete_general_goal'),
+    path('general_goal/<int:pk>/update/', views.GeneralGoalUpdate.as_view(), name='general_goal_update'),
+    path('general_goal/<int:pk>/detail/',views.GeneralGoalDetail.as_view(), name='general_goals_detail'),
 ]

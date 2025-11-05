@@ -128,7 +128,7 @@ body {
 
 /* Общие стили списка привычек */
 .habits-list {
-    width: 100%
+    width: 100%;
     max-width: 900px;
     margin: 90px auto;
 }
@@ -240,13 +240,9 @@ body {
     color: #28a745;
     font-size: 16px;
 }
-
-.habit-item.completed .habit-name,
-.habit-item.completed .habit-stats {
-    color: #6c757d;
-    text-decoration: line-through;
+.text-purple {
+    color: #5a32a3  /* темнее и ярче */
 }
-
 /* Кнопка/форма */
 .habit-status-btn {
     border: none;

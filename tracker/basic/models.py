@@ -10,14 +10,12 @@ class Habit(models.Model):
     goal = models.ForeignKey('TemporalGoal',on_delete=models.SET_NULL,
                              related_name='habits', null = True, blank = True,
                              verbose_name='Цель') # мы записываем, какой цели следует эта привычка
-
     objects = models.Manager()
 
     def __str__(self):
         return self.name
 
 class HabitStatus(models.Model):
-
     habit = models.ForeignKey(Habit, on_delete=models.CASCADE, related_name='habit_statuses')
     is_completed = models.BooleanField(default=False)
     date = models.DateField(default=date.today)
@@ -27,6 +25,15 @@ class HabitStatus(models.Model):
         unique_together = ('habit', 'date')
 
 
+class Theme(models.Model):
+    name = models.CharField(max_length=50)
+    color = models.CharField(max_length=7, default='#000000')  # для цвета в интерфейсе
+    icon = models.CharField(max_length=50, blank=True)  # для иконки
+
+    def __str__(self):
+        return self.name
+
+
 class GeneralGoal(models.Model):
     name =  models.CharField(max_length=50)
     description = models.TextField(blank=True)
@@ -34,14 +41,11 @@ class GeneralGoal(models.Model):
         get_user_model(), on_delete=models.SET_NULL,
         related_name='general_goals', null=True, verbose_name='Пользователь', )
     is_completed = models.BooleanField(default=False)  # Добавляем поле is_completed
-    theme = models.CharField(max_length=50,blank = True)
-
+    theme = models.ForeignKey(Theme, on_delete=models.SET_NULL, null=True, blank=True)
     objects = models.Manager()
 
     def __str__(self):
         return self.name
-
-
 
 class TemporalGoal(models.Model):
     name = models.CharField(max_length=50)

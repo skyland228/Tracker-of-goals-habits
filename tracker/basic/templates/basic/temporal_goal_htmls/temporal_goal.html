@@ -3,11 +3,11 @@
 {% block content %}
 <div class="habits-list">
 {% for goal in goals %}
-<div class="habit-item {% if goal.general_goal.theme == 'Программирование' %}habit-programming
-{% elif goal.general_goal.theme == 'Здоровье'%}habit-health
+<div class="habit-item {% if goal.general_goal.theme.name == 'programming' %}habit-programming
+{% elif goal.general_goal.theme.name == 'health' %}habit-health
 {% endif %}">
     <a href="{% url 'temporal_goal_detail' goal.pk %}" class="text-decoration-none text-dark">
-        <span class="habit-name">{{ goal.name }}</span>
+        <span class="text-purple">{{ goal.name }}</span>
         <span class="habit-deadline">{{ goal.deadline|date:"M. j, Y" }}</span>
     </a>
     <span>
