@@ -2,7 +2,12 @@
 
 {% block content %}
 {% for user in users %}
-{{ user.name }}
+<p>
+    <a href="{% url 'users:detail_user' user.pk %}" class="text-decoration-none text-dark">
+        {{ user.username }} <!-- Добавьте это или другое поле пользователя -->
+    </a>
+</p>
+<!--сделать возможность кликнуть на пользователя и узнать информацию о нем-->
 {% endfor %}
 {% if is_paginated %}
 <div class="pagination">

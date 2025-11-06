@@ -1,6 +1,6 @@
 from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView
+from django.views.generic import CreateView, ListView, DetailView
 from .forms import LoginUserForm, RegisterUserForm
 from .models import User
 
@@ -9,6 +9,11 @@ class ListUsers(ListView):
     model = User
     template_name = 'users/list.html'
     context_object_name = 'users'
+
+class UserDetail(DetailView):
+    model = User
+    template_name = 'users/detail_user.html'
+    context_object_name = 'user'
 
 class LoginUser(LoginView):
     form_class = LoginUserForm
