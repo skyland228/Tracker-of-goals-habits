@@ -36,8 +36,8 @@
         {% endfor %}
         {% if user.is_superuser %}
             <div class="sidebar-admin">
-                <a href="{% url 'theme_create' %}" class="admin-link">
-                    + Новая тема
+                <a href="{% url 'settings' %}" class="admin-link">
+                    Настройки
                 </a>
             </div>
         {% endif %}

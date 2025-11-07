@@ -54,7 +54,7 @@ class UpdateHabit(UserObjectsMixin,LoginRequiredMixin, UpdateView):
 class DeleteTemporalGoal(LoginRequiredMixin,DeleteView):
     model = TemporalGoal
     success_url = reverse_lazy('temporal_goals')
-    template_name = 'basic/temporal_goal_delete.html'
+    template_name = 'basic/temporal_goal_htmls/temporal_goal_delete.html'
 
 class UpdateTemporalGoal(UserObjectsMixin,LoginRequiredMixin, UpdateView):
     model = TemporalGoal
@@ -148,7 +148,13 @@ class GeneralGoalDetail(LoginRequiredMixin, DetailView,UserObjectsMixin):
     context_object_name = 'goal'
 
 class GeneralGoalCheck(LoginRequiredMixin, View):
-    pass
+    def post(self, request, pk):
+        goal = get_object_or_404(GeneralGoal, pk=pk, user=request.user)
+        GoalService.toggle_goal_completion(goal)
+        return redirect('general_goals')
+
+def settings(request):
+    return render(request, 'basic/core/settings.html')
 
 class CreateTheme(LoginRequiredMixin, CreateView):
     model = Theme

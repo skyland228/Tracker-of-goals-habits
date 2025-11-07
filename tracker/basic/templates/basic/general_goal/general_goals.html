@@ -9,25 +9,38 @@
         {{ goal.name }}
     </div>
     </a>
+        <span>
+        <form method="post" action="{% url 'general_goals_update' goal.pk %}">
+            {% csrf_token %}
+            {% if goal.is_completed %}
+                <button type="submit" class="btn btn-outline-secondary btn-sm">
+                    ❌ Отменить выполнение
+                </button>
+            {% else %}
+                <button type="submit" class="btn btn-outline-success btn-sm">
+                    ✅ Отметить выполненной
+                </button>
+            {% endif %}
+        </form>
+    </span>
 <p><a href="{% url 'general_goal_update' goal.pk %}" class="btn btn-outline-secondary">Редактировать</a></p>
-    <a href="{% url 'delete_temporal_goal' goal.pk %}" class="btn btn-outline-danger">
+    <a href="{% url 'delete_general_goal' goal.pk %}" class="btn btn-outline-danger">
         Удалить
     </a>
 </div>
 {% endfor %}
-
 {% if is_paginated %}
-<div class="pagination">
-  {% if page_obj.has_previous %}
-    <a href="?page={{ page_obj.previous_page_number }}" class="page-btn">Prev</a>
-  {% endif %}
+    <div class="pagination">
+      {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}" class="page-btn">Prev</a>
+      {% endif %}
 
-  <span class="page-info">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+      <span class="page-info">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
 
-  {% if page_obj.has_next %}
-    <a href="?page={{ page_obj.next_page_number }}" class="page-btn">Next</a>
-  {% endif %}
-</div>
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="page-btn">Next</a>
+      {% endif %}
+    </div>
 {% endif %}
 
 <div class="text-center mt-5">
