@@ -4,7 +4,7 @@ from ..models import HabitStatus
 
 class StatsService:
     @staticmethod
-    def calculate_streak_simple(user):
+    def calculate_streak_simple(user): # получается здесь мы вычисляем стрик когда выполняем все привычки без пропуска
         dates = HabitStatus.objects.filter(habit__user=user) \
             .values_list('date', flat=True).distinct().order_by('-date') # получаем наши статусы за дни
         all_statuses = HabitStatus.objects.filter(
@@ -38,7 +38,7 @@ class StatsService:
 
     @staticmethod
     def get_all_user_stats(user):
-        today = timezone.now().date()
+        today = timezone.now().date()  # сегодня
         stats = HabitStatus.objects.filter(habit__user = user).aggregate( # получаем данные одним запросом
             today_total = Count('id', filter = Q(date=today)), # Общее кол-во сегодня
             today_completed = Count('id', filter = Q(date=today, is_completed = True)), # Выполненные сегодня
@@ -53,8 +53,8 @@ class StatsService:
 class StatsFormatter:
     @staticmethod
     def format_today(stats):
-        completed = stats['today_completed'] or 0
-        total = stats['today_total'] or 0
+        completed = stats['today_completed']
+        total = stats['today_total']
         percentage = round((completed / total) * 100) if total > 0 else 0
         return {
             'completed': completed,

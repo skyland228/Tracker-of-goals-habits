@@ -43,7 +43,14 @@ INSTALLED_APPS = [
     'basic',
     'django_extensions',
 ]
-
+# Проверь что тесты используют отдельную БД
+DATABASES = {
+    'default': {
+        'TEST': {
+            'NAME': 'test_db.sqlite3',  # отдельная тестовая БД
+        }
+    }
+}
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
