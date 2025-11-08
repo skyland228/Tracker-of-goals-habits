@@ -5,21 +5,19 @@ from django.utils import timezone
 from django.db import transaction
 from basic.models import Habit, HabitStatus
 from .service.general_service import StatsService, StatsFormatter
+from .service.habit_service import HabitService
 from .views import Habits
 
 
-class UseServiceTest(TestCase):
-
+class UseGenralServiceTest(TestCase):
     def tearDown(self):
         """Очистка после КАЖДОГО теста"""
         try:
-            # Пытаемся очистить в транзакции
             with transaction.atomic():
                 HabitStatus.objects.all().delete()
                 Habit.objects.all().delete()
                 get_user_model().objects.all().delete()
         except Exception:
-            # Если транзакция сломана - пропускаем очистку
             pass
 
     def test_streak(self):
@@ -150,5 +148,25 @@ class UseServiceTest(TestCase):
         result = StatsFormatter.format_total(test_stats)
         self.assertEqual(result['percentage'], 60) # ожидаем процент 60, ибо выполнили на 60%
         self.assertEqual(result['text'],'60/100') # ожидаем 60/100, ведь выполнили только 60 из 100
-        print(result)
+
+class UseHabitServiceTest(TestCase):
+    def tearDown(self):
+        """Очистка после КАЖДОГО теста"""
+        try:
+            with transaction.atomic():
+                HabitStatus.objects.all().delete()
+                Habit.objects.all().delete()
+                get_user_model().objects.all().delete()
+        except Exception:
+            pass
+    def test_get_today_habit_status(self):
+        username = f'testuser_{uuid.uuid4().hex[:8]}'
+        today = timezone.now().date()
+        user = get_user_model().objects.create_user(username)
+        habit1 = Habit.objects.create(user=user, name="Привычка 1")
+        habit2 = Habit.objects.create(user=user, name="Привычка 2")
+        result = HabitService.get_habits_with_today_status(user, today)
+        self.assertEqual(HabitStatus.objects.filter(date=timezone.now().date()).count(), 2)
+        # мы проверяем, что у нас сегодня 2 привычки и создалось 2 статуса
+
 
