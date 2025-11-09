@@ -23,7 +23,8 @@ class HabitStatus(models.Model):
     objects = models.Manager()
     class Meta:
         unique_together = ('habit', 'date')
-
+    def __str__(self):
+        return self.habit.name
 
 class Theme(models.Model):
     name = models.CharField(max_length=50)
