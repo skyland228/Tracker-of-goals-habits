@@ -1,4 +1,6 @@
 import uuid
+from datetime import timedelta
+
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.utils import timezone
@@ -159,14 +161,31 @@ class UseHabitServiceTest(TestCase):
                 get_user_model().objects.all().delete()
         except Exception:
             pass
-    def test_get_today_habit_status(self):
+    def test_ensure_habit_statuses_exist(self):
+        """Тест создания всех нужных статусов"""
         username = f'testuser_{uuid.uuid4().hex[:8]}'
         today = timezone.now().date()
         user = get_user_model().objects.create_user(username)
-        habit1 = Habit.objects.create(user=user, name="Привычка 1")
-        habit2 = Habit.objects.create(user=user, name="Привычка 2")
-        result = HabitService.get_habits_with_today_status(user, today)
-        self.assertEqual(HabitStatus.objects.filter(date=timezone.now().date()).count(), 2)
-        # мы проверяем, что у нас сегодня 2 привычки и создалось 2 статуса
+        habit1 = Habit.objects.create(user = user,name = 'Habit 1', created_at=timezone.now().date() - timedelta(days = 2)) # по сути должно быть 3 статуса
+        habit2 = Habit.objects.create(user = user, name = 'Habit 2', created_at=timezone.now().date() - timedelta(days = 5)) # 6
+        HabitService.ensure_habit_statuses_exist(user, timezone.now().date())
+        self.assertEqual(HabitStatus.objects.all().count(), 9)
 
-
+    def test_stats_of_habits(self):
+        """Тест получения статистики"""
+        username = f'testuser_{uuid.uuid4().hex[:8]}'
+        today = timezone.now().date()
+        user = get_user_model().objects.create_user(username)
+        habit1 = Habit.objects.create(user = user, name = 'Habit 1', created_at=timezone.now().date() - timedelta(days = 4))
+        # 3 статуса false
+        HabitStatus.objects.create(habit=habit1, date=today - timedelta(days = 4), is_completed=False)
+        HabitStatus.objects.create(habit=habit1, date=today - timedelta(days = 3), is_completed=False)
+        HabitStatus.objects.create(habit=habit1, date=today - timedelta(days = 2), is_completed=False)
+        HabitStatus.objects.create(habit=habit1, date=today - timedelta(days = 1), is_completed=True)
+        HabitStatus.objects.create(habit=habit1, date=today, is_completed=True)
+        #два выполненных статуса
+        habits = HabitService.get_user_habits_with_full_stats(user, today)
+        habit_with_stats = habits[0]
+        self.assertEqual(habit_with_stats.total_days, 5) # все дни 5
+        self.assertEqual(habit_with_stats.completed_days, 2) # выполненные 2
+        self.assertEqual(habit_with_stats.progress, 40) # прогресс 2/5 40%

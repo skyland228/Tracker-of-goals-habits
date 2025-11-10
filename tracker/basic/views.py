@@ -40,7 +40,7 @@ class AddHabits(CreateView):
     def form_valid(self, form):
         form.instance.user = self.request.user
         response = super().form_valid(form)  # ← сначала СОХРАНЯЕМ привычку
-        HabitService.get_habits_with_today_status(self.request.user, today=timezone.now())
+        HabitService.ensure_habit_statuses_exist(self.request.user, target_date=timezone.now())
         # HabitService.ensure_habit_statuses_exist(self.request.user)  # ← теперь создаст статусы
         return response
 

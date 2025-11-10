@@ -1,17 +1,20 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 from datetime import date
+from django.utils import timezone
+
 
 class Habit(models.Model):
     name = models.CharField(max_length=50)
     user = models.ForeignKey(
         get_user_model(),on_delete=models.SET_NULL,related_name='habits',null=True,verbose_name='Пользователь',)
-    created_at = models.DateField(auto_now_add=True)
+    created_at = models.DateField(default=date.today)
     goal = models.ForeignKey('TemporalGoal',on_delete=models.SET_NULL,
                              related_name='habits', null = True, blank = True,
                              verbose_name='Цель') # мы записываем, какой цели следует эта привычка
     objects = models.Manager()
-
+    class Meta:
+        ordering = ['-created_at']
     def __str__(self):
         return self.name
 
@@ -45,6 +48,8 @@ class GeneralGoal(models.Model):
     theme = models.ForeignKey(Theme, on_delete=models.SET_NULL, null=True, blank=True)
     objects = models.Manager()
 
+    class Meta:
+        ordering = ['name']
     def __str__(self):
         return self.name
 
@@ -61,6 +66,8 @@ class TemporalGoal(models.Model):
                                      blank=True, verbose_name='Основная цель')
     objects = models.Manager()
 
+    class Meta:
+        ordering = ['deadline']
     def __str__(self):
         return self.name
 

@@ -34,10 +34,13 @@ class HabitService:
                     # Создаем статус пока добавляя его в наш список
                     statuses_to_create.append(
                         HabitStatus(habit=habit, date=current_date, is_completed=False))
-                    current_date = current_date + timedelta(days=1) # ну меняем тек дату на день
+                current_date = current_date + timedelta(days=1) # ну меняем тек дату на день
             if statuses_to_create: # если список не пустой и есть привычки, которым надо создать статус
-                HabitStatus.objects.bulk_create(statuses_to_create, batch_size=100) # то создаем привычки из списка
-                # по 100 штук за раз
+                HabitStatus.objects.bulk_create(
+                    statuses_to_create,
+                    batch_size=100,
+                    ignore_conflicts=True ) # ← проигнорирует дубликаты
+                                     # то создаем привычки из списка по 100 штук за раз
     @staticmethod
     def get_user_habits_with_progress(user,date =None):
         """Возращяет прогресс привычек"""
@@ -54,26 +57,6 @@ class HabitService:
             for habit in habits ]
 
     @staticmethod
-    def get_habits_with_today_status(user, today):
-        habits = Habit.objects.filter(user=user) # получаем привычки нашего пользователя
-        habit_ids = [habit.id for habit in habits] # вычисляем все id наших привычек
-        today_statuses = HabitStatus.objects.filter(
-            habit_id__in=habit_ids,
-            date=today) # получаем сегодняшний статус для привычек
-        status_by_habit_id = {status.habit_id: status for status in today_statuses} # создаем словарь
-        # где каждой нашей привычки соответствует id
-        statuses_to_create = []
-        for habit in habits:
-            if habit.id not in status_by_habit_id:
-                new_status = HabitStatus(habit = habit, date=today, is_completed=False)
-                statuses_to_create.append(new_status) # отмечаем в списке статус
-                habit.today_status = new_status
-            else:
-                habit.today_status = status_by_habit_id.get(habit.id) # ну и получаем статус для каждой привычки
-        if statuses_to_create:
-            HabitStatus.objects.bulk_create(statuses_to_create) # создаем записи статусов в бд
-        return habits
-    @staticmethod
     def get_user_habits_with_full_stats(user, date=None):
         if date is None:
             date = timezone.now().date()
@@ -86,7 +69,7 @@ class HabitService:
             habit.total_days = item['total_days']
             habit.completed_days = item['completed_days']
             habit.progress = (item['completed_days'] / item['total_days'] * 100) if item['total_days'] > 0 else 0
-            habit.today_status = habit.habit_statuses.filter(date=date).first()
+            habit.today_status = habit.habit_statuses.filter(date=date).first() # получаем сегодняшний статус привычки, чтобы не делать доп
             result.append(habit)
         return result
 
