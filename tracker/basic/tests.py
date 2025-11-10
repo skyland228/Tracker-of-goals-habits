@@ -189,3 +189,14 @@ class UseHabitServiceTest(TestCase):
         self.assertEqual(habit_with_stats.total_days, 5) # все дни 5
         self.assertEqual(habit_with_stats.completed_days, 2) # выполненные 2
         self.assertEqual(habit_with_stats.progress, 40) # прогресс 2/5 40%
+    def test_swith_status(self):
+        username = f'testuser_{uuid.uuid4().hex[:8]}'
+        user = get_user_model().objects.create_user(username)
+        habit1 = Habit.objects.create(user=user, name='Habit 1', created_at=timezone.now().date() - timedelta(days=4))
+        status = HabitStatus.objects.create(habit=habit1, date=timezone.now().date(), is_completed=False)
+        HabitService.toggle_status(status) # меняет значения статуса
+        self.assertEqual(status.is_completed, True)
+        status2 = HabitStatus.objects.create(habit=habit1, date=timezone.now().date() - timedelta(days = 1)
+                                             ,is_completed=True)
+        HabitService.toggle_status(status2)
+        self.assertFalse(status2.is_completed, False)
