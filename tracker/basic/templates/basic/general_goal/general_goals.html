@@ -5,9 +5,7 @@
 <div class="habit-item" style="background-color:
 {{ goal.theme.color }}40; border-left: 4px solid {{ goal.theme.color }}">
     <a href="{% url 'general_goals_detail' goal.pk %}" class="text-decoration-none text-dark">
-    <div style="color:{{ goal.theme.color }}">
         {{ goal.name }}
-    </div>
     </a>
         <span>
         <form method="post" action="{% url 'general_goals_update' goal.pk %}">

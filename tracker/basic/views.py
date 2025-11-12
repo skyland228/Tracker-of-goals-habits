@@ -70,7 +70,7 @@ class Habits(LoginRequiredMixin, ListView):
     model = Habit
     template_name = 'basic/habit/Habits.html'
     context_object_name = 'habits'
-    paginate_by = 3
+    paginate_by = 5
     login_url = 'users:login'
     def get_queryset(self):
         return HabitService.get_user_habits_with_full_stats(self.request.user)
@@ -88,7 +88,7 @@ class TemporalGoals(UserObjectsMixin,LoginRequiredMixin,ListView):
     template_name = 'basic/temporal_goal_htmls/temporal_goal.html'
     context_object_name = 'goals'
     login_url = 'users:login'
-    paginate_by = 3
+    paginate_by = 5
 
 class TemporalGoalCheck(LoginRequiredMixin, View):
     def post(self,request,pk):
@@ -123,7 +123,7 @@ class GeneralGoals(UserObjectsMixin,LoginRequiredMixin,ListView):
     template_name = 'basic/general_goal/general_goals.html'
     context_object_name = 'goals'
     login_url = 'users:login'
-    paginate_by = 3
+    paginate_by = 5
 
 class GeneralGoalAdd(LoginRequiredMixin, CreateView):
     model = GeneralGoal

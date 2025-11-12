@@ -6,12 +6,11 @@
     {% for habit in habits %}
     {% with status=habit.statuses.all|dictsort:"date"|last %}
     <!-- Динамические цвета из БД -->
-    <div class="habit-item {% if status.is_completed %}habit-completed{% endif %}"
-         style="background-color: {{ habit.goal.general_goal.theme.color }}40; border-left: 4px solid {{ habit.goal.general_goal.theme.color }}">
+    <div class="habit-item" style="background-color: {{ habit.goal.general_goal.theme.color }}40; border-left: 4px solid {{ habit.goal.general_goal.theme.color }}">
 
         <!-- Название и статистика -->
         <div>
-            <span class="habit-name" style="color: {{ habit.goal.general_goal.theme.color }}">{{ habit.name }}</span>
+            <span>{{ habit.name }}</span>
             <span class="habit-stats">({{ habit.completed_days }}/{{ habit.total_days }})</span>
         </div>
 

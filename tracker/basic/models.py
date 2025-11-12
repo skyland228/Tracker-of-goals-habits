@@ -48,6 +48,10 @@ class GeneralGoal(models.Model):
     theme = models.ForeignKey(Theme, on_delete=models.SET_NULL, null=True, blank=True)
     objects = models.Manager()
 
+    def completed_goals(self):
+        return self.temporal_goal.filter(is_completed=True)
+    def incomplete_goals(self):
+        return self.temporal_goal.filter(is_completed=False)
     class Meta:
         ordering = ['name']
     def __str__(self):

@@ -2,4 +2,20 @@
 
 {% block content %}
 
+    <div style="background-color: {{ goal.theme.color }}40;">
+        <h1>{{ goal.name }}</h1>
+        <p>{{ goal.description }}</p>
+        <div style="background-color: {{ goal.theme.color }}50;">
+        <h3>Active_goals</h3>
+            {% for active_goal in goal.incomplete_goals %}
+                <p>{{ active_goal.name }}</p>
+            {% endfor %}
+        </div>
+        <div style="background-color: color-mix(in srgb, #22c55e 20%, {{ goal.theme.color }} 20%);">
+            <h3>Completed_goals</h3>
+            {% for completed_goal in goal.completed_goals %}
+                <p>{{ completed_goal.name }}</p>
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}
