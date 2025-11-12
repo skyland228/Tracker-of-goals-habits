@@ -17,5 +17,8 @@
                 <p>{{ completed_goal.name }}</p>
             {% endfor %}
         </div>
+        <div style="margin: 20px 0; padding: 15px; border-left: 4px solid {{ goal.theme.color }};">
+            <h3>Прогресс: {{ progress }}%</h3>
+        </div>  
     </div>
 {% endblock %}

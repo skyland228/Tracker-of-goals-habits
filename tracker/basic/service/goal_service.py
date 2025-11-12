@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404
-from ..models import Habit, TemporalGoal
+from ..models import Habit, TemporalGoal, GeneralGoal
+
 
 class GoalService:
     @staticmethod
@@ -14,6 +15,11 @@ class GoalService:
         goal.is_completed = not goal.is_completed
         goal.save()
         return goal
+    @staticmethod
+    def progress_of_goal(goal):
+        total = goal.temporal_goal.count()
+        completed_goals = goal.completed_goals().count()
+        return (completed_goals / total) * 100 if total else 0
 
 
 

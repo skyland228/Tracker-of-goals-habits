@@ -149,7 +149,11 @@ class GeneralGoalDetail(LoginRequiredMixin, DetailView,UserObjectsMixin):
     model = GeneralGoal
     template_name = 'basic/general_goal/general_goal.html'
     context_object_name = 'goal'
-
+    def get_context_data(self,**kwargs):
+        context = super().get_context_data(**kwargs)
+        goal = self.object  # ✅ Объект УЖЕ получен автоматически!
+        context['progress'] = GoalService.progress_of_goal(goal)
+        return context
 class GeneralGoalCheck(LoginRequiredMixin, View):
     def post(self, request, pk):
         goal = get_object_or_404(GeneralGoal, pk=pk, user=request.user)
