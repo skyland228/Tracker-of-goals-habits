@@ -17,6 +17,7 @@ class AddTgoal(forms.ModelForm):
         model = TemporalGoal
         fields = ['name','deadline','general_goal']
 
+
 class AddGeneralGoal(forms.ModelForm):
     class Meta:
         model = GeneralGoal

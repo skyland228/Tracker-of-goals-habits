@@ -5,13 +5,14 @@ from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.db import transaction
-from basic.models import Habit, HabitStatus
+from basic.models import Habit, HabitStatus, GeneralGoal, TemporalGoal
 from .service.general_service import StatsService, StatsFormatter
+from .service.goal_service import GoalService
 from .service.habit_service import HabitService
 from .views import Habits
 
 
-class UseGenralServiceTest(TestCase):
+class UseGeneralServiceTest(TestCase):
     def tearDown(self):
         """Очистка после КАЖДОГО теста"""
         try:
@@ -96,6 +97,23 @@ class UseGenralServiceTest(TestCase):
         self.assertEqual(stats['total_progress']['total'], 9)
         self.assertEqual(stats['total_progress']['percentage'], 100)
         self.assertEqual(stats['total_progress']['text'], '9/9')
+
+    def test_progress_of_goals(self):
+        """Тест расчета прогресса цели"""
+        username = f'testuser_{uuid.uuid4().hex[:8]}'
+        user = get_user_model().objects.create_user(username)
+        general_goal = GeneralGoal.objects.create(user=user, name = "Главная цель")
+        subgoal_1 = TemporalGoal.objects.create(user = user, name = "Подцель 1", general_goal = general_goal,
+                                                is_completed = True)
+        subgoal_2 = TemporalGoal.objects.create(user = user, name = "Подцель 2", general_goal = general_goal,
+                                                is_completed = False)
+        result = GoalService.progress_of_goal(general_goal)
+        self.assertEqual(result, 50) # одну под цель я выполнил другую нет 50
+        # Назначаем главную цель
+        general_goal.main_goal = subgoal_1  # subgoal_1 - главная цель бонус + 20
+        general_goal.save()
+        result = GoalService.progress_of_goal(general_goal)
+        self.assertEqual(result, 70) # уже главная цель дает бонус + 20
 
     def test_stats_habits_imperfect(self):
         """Тест статистики с неидеальным выполнением"""
@@ -199,4 +217,4 @@ class UseHabitServiceTest(TestCase):
         status2 = HabitStatus.objects.create(habit=habit1, date=timezone.now().date() - timedelta(days = 1)
                                              ,is_completed=True)
         HabitService.toggle_status(status2)
-        self.assertFalse(status2.is_completed, False)
+        self.assertEqual(status2.is_completed, False)

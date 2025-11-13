@@ -71,7 +71,6 @@ class TemporalGoal(models.Model):
                                      related_name='temporal_goal', null=True,
                                      blank=True, verbose_name='Основная цель')
     objects = models.Manager()
-
     class Meta:
         ordering = ['deadline']
     def __str__(self):
