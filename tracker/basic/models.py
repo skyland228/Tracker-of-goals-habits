@@ -45,6 +45,8 @@ class GeneralGoal(models.Model):
         get_user_model(), on_delete=models.SET_NULL,
         related_name='general_goals', null=True, verbose_name='Пользователь', )
     is_completed = models.BooleanField(default=False)  # Добавляем поле is_completed
+    main_goal = models.OneToOneField('TemporalGoal',on_delete=models.SET_NULL, null = True, blank=True,
+                                     related_name='is_main_for', verbose_name='Главная подцель')
     theme = models.ForeignKey(Theme, on_delete=models.SET_NULL, null=True, blank=True)
     objects = models.Manager()
 

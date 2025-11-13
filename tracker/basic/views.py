@@ -143,7 +143,7 @@ class GeneralGoalUpdate(LoginRequiredMixin, UpdateView):
     model = GeneralGoal
     template_name = 'basic/general_goal/add_general_goal.html'
     success_url = reverse_lazy('general_goals')
-    fields = ['name','description','theme']
+    fields = ['name','description','main_goal','theme']
 
 class GeneralGoalDetail(LoginRequiredMixin, DetailView,UserObjectsMixin):
     model = GeneralGoal

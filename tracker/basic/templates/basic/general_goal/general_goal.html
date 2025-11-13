@@ -17,8 +17,22 @@
                 <p>{{ completed_goal.name }}</p>
             {% endfor %}
         </div>
+        {% if progress %}
         <div style="margin: 20px 0; padding: 15px; border-left: 4px solid {{ goal.theme.color }};">
             <h3>Прогресс: {{ progress }}%</h3>
-        </div>  
+        </div>
+        {% endif %}
+        {% if goal.main_goal %}
+            <h4>Главная цель</h4>
+            <p style="background: {{ goal.theme.color }}15; padding: 8px; border-radius: 4px;">
+                🏆 {{ goal.main_goal.name }} 
+
+            {% if goal.main_goal.is_completed %}
+                ✅ 
+            {% else %}
+                ❌ 
+            </p>
+            {% endif %}
+        {% endif %}
     </div>
 {% endblock %}

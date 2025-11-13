@@ -18,8 +18,14 @@ class GoalService:
     @staticmethod
     def progress_of_goal(goal):
         total = goal.temporal_goal.count()
+        if total == 0:
+            return 0
         completed_goals = goal.completed_goals().count()
-        return (completed_goals / total) * 100 if total else 0
-
+        base_progress = int((completed_goals / total) * 100)
+        if goal.main_goal and goal.main_goal.is_completed:
+            main_goal_bonus = 20
+            return min(100, base_progress + main_goal_bonus) # костыль, чтобы не выйти за 100
+            # в дальнейшем придумаю как более грамотно в 100 укладывать все
+        return base_progress
 
 
