@@ -1,22 +1,12 @@
 from django.contrib.auth.views import LoginView
+from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, DetailView
-from .forms import LoginUserForm, RegisterUserForm
-from .models import User
-
-
-class ListUsers(ListView):
-    model = User
-    template_name = 'users/list.html'
-    context_object_name = 'users'
-
-class UserDetail(DetailView):
-    model = User
-    template_name = 'users/detail_user.html'
-    context_object_name = 'user'
+from django.views.generic import CreateView
+from django.contrib.auth.forms import AuthenticationForm
+from .forms import RegisterUserForm
 
 class LoginUser(LoginView):
-    form_class = LoginUserForm
+    form_class = AuthenticationForm # я использую кастомные формы только для замены меток для полей зачем
     template_name = 'users/login.html'
     extra_context = {'title': 'Авторизация',}
 
@@ -25,3 +15,4 @@ class RegisterUser(CreateView):
     template_name = 'users/register.html'
     extra_context = {'title': 'Регистрация'}
     success_url = reverse_lazy('users:login')
+

@@ -1,6 +1,5 @@
 import uuid
 from datetime import timedelta
-
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.utils import timezone
@@ -9,19 +8,9 @@ from basic.models import Habit, HabitStatus, GeneralGoal, TemporalGoal
 from .service.general_service import StatsService, StatsFormatter
 from .service.goal_service import GoalService
 from .service.habit_service import HabitService
-from .views import Habits
 
 
 class UseGeneralServiceTest(TestCase):
-    def tearDown(self):
-        """Очистка после КАЖДОГО теста"""
-        try:
-            with transaction.atomic():
-                HabitStatus.objects.all().delete()
-                Habit.objects.all().delete()
-                get_user_model().objects.all().delete()
-        except Exception:
-            pass
 
     def test_streak(self):
         """Тест расчета серии при последовательном выполнении привычки 5 дней подряд"""
@@ -170,15 +159,6 @@ class UseGeneralServiceTest(TestCase):
         self.assertEqual(result['text'],'60/100') # ожидаем 60/100, ведь выполнили только 60 из 100
 
 class UseHabitServiceTest(TestCase):
-    def tearDown(self):
-        """Очистка после КАЖДОГО теста"""
-        try:
-            with transaction.atomic():
-                HabitStatus.objects.all().delete()
-                Habit.objects.all().delete()
-                get_user_model().objects.all().delete()
-        except Exception:
-            pass
     def test_ensure_habit_statuses_exist(self):
         """Тест создания всех нужных статусов"""
         username = f'testuser_{uuid.uuid4().hex[:8]}'
