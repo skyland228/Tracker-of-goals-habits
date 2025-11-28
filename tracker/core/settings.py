@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users.apps.UsersConfig',
     'basic',
+    'habits',
 ]
 
 DATABASES = {
@@ -39,7 +40,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'tracker.urls'
+ROOT_URLCONF = 'core.urls'
 
 TEMPLATES = [
     {
@@ -51,13 +52,13 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'tracker.context_processors.get_menu', # прописываем вот контекст процессор так как это уникальное для проекта
+                'core.context_processors.get_menu', # прописываем вот контекст процессор так как это уникальное для проекта
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'tracker.wsgi.application'
+WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': {

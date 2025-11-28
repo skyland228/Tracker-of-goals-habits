@@ -1,15 +1,12 @@
-from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import ListView, DetailView, TemplateView, UpdateView, CreateView, DeleteView
 from .Mixin import UserObjectsMixin
-from .forms import HabitStatusForm, AddHabit, AddTgoal, AddGeneralGoal, CreateTheme
-from .models import Habit, GeneralGoal, TemporalGoal, HabitStatus, Theme
-from django.utils import timezone
+from .forms import  AddTgoal, AddGeneralGoal, CreateTheme
+from .models import  GeneralGoal, TemporalGoal,  Theme
 from .service.general_service import StatsService
-from .service.habit_service import HabitService
 from .service.goal_service import GoalService
 
 def home(request):
@@ -27,29 +24,6 @@ class Profile(TemplateView):
             'streak': stats['streak']})
         return context
 
-class AddHabits(CreateView):
-    model = Habit
-    template_name = 'basic/habit/add_habit.html'
-    success_url = reverse_lazy('habits')
-    form_class = AddHabit
-
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        response = super().form_valid(form)  # ← сначала СОХРАНЯЕМ привычку
-        HabitService.ensure_habit_statuses_exist(self.request.user, target_date=timezone.now())
-        # HabitService.ensure_habit_statuses_exist(self.request.user)  # ← теперь создаст статусы
-        return response
-
-class DeleteHabit(UserObjectsMixin,LoginRequiredMixin, DeleteView):
-    model = Habit
-    success_url = reverse_lazy('habits')
-    template_name = 'basic/habit/habit_delete.html'
-
-class UpdateHabit(UserObjectsMixin,LoginRequiredMixin, UpdateView):
-    model = Habit
-    success_url = reverse_lazy('habits')
-    template_name = 'basic/habit/add_habit.html'
-    fields = ['name','goal']
 
 class DeleteTemporalGoal(LoginRequiredMixin,DeleteView):
     model = TemporalGoal
@@ -61,23 +35,6 @@ class UpdateTemporalGoal(UserObjectsMixin,LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy('temporal_goals')
     template_name = 'basic/temporal_goal_htmls/add_temporal_goal.html'
     fields = ['name','general_goal','deadline']
-
-class Habits(LoginRequiredMixin, ListView):
-    model = Habit
-    template_name = 'basic/habit/Habits.html'
-    context_object_name = 'habits'
-    paginate_by = 5
-    login_url = 'users:login'
-    def get_queryset(self):
-        return HabitService.get_user_habits_with_full_stats(self.request.user)
-
-class HabitStatusUpdateView(UpdateView):
-    model = HabitStatus
-    form_class = HabitStatusForm
-    def form_valid(self, form):
-        status = self.get_object()  # Получаем текущий объект из базы, а не из формы
-        HabitService.toggle_status(status)
-        return redirect('habits')
 
 class TemporalGoals(UserObjectsMixin,LoginRequiredMixin,ListView):
     model = TemporalGoal

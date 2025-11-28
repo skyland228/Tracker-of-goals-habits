@@ -7,13 +7,7 @@ urlpatterns = [
     path('profile/', views.Profile.as_view(), name='profile'),
     path('settings/', views.settings, name='settings'),
     path('theme/create/', views.CreateTheme.as_view(), name='theme_create'),
-    # {% block 'habits' %}
-    path('habits/', views.Habits.as_view(), name='habits'),
-    path('habits/<int:pk>/update', views.UpdateHabit.as_view(), name='update_habit'),
-    path('add_habit/',views.AddHabits.as_view(), name = 'add_habit'),
-    path('habits/<int:pk>/delete/',views.DeleteHabit.as_view(), name='delete_habit'),
-    path('status/<int:pk>/update/', views.HabitStatusUpdateView.as_view(), name='habitstatus_update'),
-    # {% endblock %}
+
     # {% block 'temporal_goals' %}
     path('temporal_goals/', views.TemporalGoals.as_view(), name='temporal_goals'),
     path('temp_status/<int:pk>/update/', views.TemporalGoalCheck.as_view(), name='temporal_update'),

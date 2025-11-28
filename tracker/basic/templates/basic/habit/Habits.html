@@ -32,8 +32,8 @@
         </form>
         {% endif %}
 
-        <a href="{% url 'update_habit' habit.pk %}" class="btn btn-outline-secondary">Редактировать</a>
-        <a href="{% url 'delete_habit' habit.pk %}" class="btn btn-outline-danger">Удалить</a>
+        {% comment %} <a href="{% url 'update_habit' habit.pk %}" class="btn btn-outline-secondary">Редактировать</a>
+        <a href="{% url 'delete_habit' habit.pk %}" class="btn btn-outline-danger">Удалить</a> {% endcomment %}
     </div>
     {% endwith %}
     {% endfor %}
@@ -52,5 +52,5 @@
 </div>
 {% endif %}
 
-<a href="{% url 'add_habit' %}" class="btn btn-outline-secondary">Создать привычку</a>
+{% comment %} <a href="{% url 'add_habit' %}" class="btn btn-outline-secondary">Создать привычку</a> {% endcomment %}
 {% endblock %}

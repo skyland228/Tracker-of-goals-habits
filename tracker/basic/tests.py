@@ -3,11 +3,10 @@ from datetime import timedelta
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.utils import timezone
-from django.db import transaction
 from basic.models import Habit, HabitStatus, GeneralGoal, TemporalGoal
 from .service.general_service import StatsService, StatsFormatter
 from .service.goal_service import GoalService
-from .service.habit_service import HabitService
+from ..habits.services.habit_service import HabitService
 
 
 class UseGeneralServiceTest(TestCase):

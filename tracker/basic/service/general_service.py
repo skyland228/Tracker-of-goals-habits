@@ -1,6 +1,6 @@
 from django.db.models import Count, Q
 from django.utils import timezone
-from ..models import HabitStatus
+from habits.models import HabitStatus
 
 class StatsService:
     @staticmethod

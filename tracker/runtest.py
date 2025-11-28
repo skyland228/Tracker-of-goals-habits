@@ -7,14 +7,13 @@ from django.test.utils import get_runner
 
 
 def main():
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "tracker.settings")
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings")
     django.setup()
 
     TestRunner = get_runner(settings)
     test_runner = TestRunner()
 
-    # ЯВНО говорим: гони тесты basic и users
-    failures = test_runner.run_tests(["basic", "users"])
+    failures = test_runner.run_tests(["habits", "users"])
     sys.exit(bool(failures))
 
 
