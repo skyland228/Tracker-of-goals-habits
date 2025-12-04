@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% for habit in habits %}
+    <div class="habit-item" style="background-color: {{ habit.goal.general_goal.theme.color }}30;">
+        <div>
+            <span>{{ habit.name }}</span>
+            <span class="habit-stats">({{ habit.completed_days }}/{{ habit.total_days }})</span>
+        </div>
+        <form action="{% url 'habits:habit_status_update' habit.today_status.id %}" method="post" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="habit-status-btn">
+                <div class="habit-item {% if habit.today_status.is_completed %}completed{% else %}active{% endif %}">
+                    <div class="status-indicator">
+                        {% if habit.today_status.is_completed %}
+                            ✅ Выполнено
+                        {% else %}
+                            ⏳ Ожидает
+                        {% endif %}
+                    </div>
+                </div>
+            </button>
+        </form>
+        <a href="{% url 'habits:update_habit' habit.pk %}" class="btn btn-outline-secondary">Редактировать</a>
+        <a href="{% url 'habits:delete_habit' habit.pk %}" class="btn btn-outline-danger">Удалить</a>
+    </div>
+{% endfor %}
+{% endblock content %}
+

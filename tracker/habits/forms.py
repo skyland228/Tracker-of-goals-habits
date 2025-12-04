@@ -1,4 +1,4 @@
-from .models import HabitStatus, Habit,
+from .models import HabitStatus, Habit
 from django import forms
 
 class HabitStatusForm(forms.ModelForm):

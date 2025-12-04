@@ -3,7 +3,7 @@ from django.db import models
 
 class Theme(models.Model):
     name = models.CharField(max_length=50)
-    color = models.CharField(max_length=7, default='#000000')  # для цвета в интерфейсе
+    color = models.CharField(max_length=7, default="#0D20CC")  # для цвета в интерфейсе
     icon = models.CharField(max_length=50, blank=True)  # для иконки
 
     def __str__(self):

@@ -140,6 +140,21 @@ body {
     font-size: 14px;    /* нормальный размер, чтобы не выходило за пределы блока */
 }
 
+.habit-item {
+    display: grid;
+    grid-template-columns: 2fr auto auto auto;
+    gap: 25px;
+    align-items: center;
+    padding: 5px 10px;
+    margin-bottom:  5px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+
+
 .pagination {
     display: flex;
     justify-content: center;
@@ -168,30 +183,12 @@ body {
     width: 1650% !important;
     height: 10px !important;
 }
-/* Стиль элемента привычки */
-.habit-item {
-    position: relative;  /* Важно! Теперь абсолютные элементы внутри будут привязаны к этому блоку */
-    padding: 10px 20px;
-    display: block; /* или flex/grid с правильными настройками */
-    margin-bottom: 15px;
-    border-radius: 30px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    transition: all 0.3s ease;
-}
+
 .habits-list {
     width: 100%;
 }
 
-.habit-item {
-    display: flex;
-    justify-content: space-between; /* распределяет по краям */
-    align-items: center;           /* выравнивает по вертикали */
-    padding: 5px;
-    margin: 10px 0;
-    border-radius: 8px;
-    width: 100%; /* важно! */
-    box-sizing: border-box; /* учитывает padding в ширине */
-}
+
 
 .habit-programming {
     background-color: #e3f2fd;
