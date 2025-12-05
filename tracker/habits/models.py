@@ -1,14 +1,13 @@
 from django.db import models
 from datetime import date
 from django.contrib.auth import get_user_model
-from basic.models import TemporalGoal
 
 class Habit(models.Model):
     name = models.CharField(max_length=50)
     user = models.ForeignKey(
         get_user_model(),on_delete=models.SET_NULL,related_name='habits',null=True,verbose_name='Пользователь',)
     created_at = models.DateField(default=date.today)
-    goal = models.ForeignKey(TemporalGoal,on_delete=models.SET_NULL,
+    goal = models.ForeignKey("goals.TemporalGoal",on_delete=models.SET_NULL,
                              related_name='habits', null = True, blank = True,
                              verbose_name='Цель') # мы записываем, какой цели следует эта привычка
     objects = models.Manager()

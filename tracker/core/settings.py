@@ -19,7 +19,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'users.apps.UsersConfig',
-    'basic',
+    'goals',
     'habits',
 ]
 
@@ -93,7 +93,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
-    BASE_DIR /  "basic/static",  # или BASE_DIR /
+    BASE_DIR /  "goals/static",  # или BASE_DIR /
 ]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

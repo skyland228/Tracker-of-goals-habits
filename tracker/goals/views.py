@@ -16,7 +16,7 @@ class Profile(TemplateView):
     template_name = 'goals/core/profile.html'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        stats = StatsService.get_all_user_stats(self.request.user)
+        stats = StatsService.calculate_stats(self.request.user)
         context.update({
             'user': self.request.user,
             'today_progress': stats['today_progress'],
@@ -104,7 +104,7 @@ class GeneralGoalDetail(LoginRequiredMixin, DetailView,UserObjectsMixin):
     context_object_name = 'goal'
     def get_context_data(self,**kwargs):
         context = super().get_context_data(**kwargs)
-        goal = self.object  # ✅ Объект УЖЕ получен автоматически!
+        goal = self.object  
         context['progress'] = GoalService.progress_of_goal(goal)
         return context
 class GeneralGoalCheck(LoginRequiredMixin, View):

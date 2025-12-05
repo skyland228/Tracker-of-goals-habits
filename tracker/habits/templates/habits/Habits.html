@@ -6,7 +6,7 @@
         <div>
             <span>{{ habit.name }}</span>
             <span class="habit-stats">({{ habit.completed_days }}/{{ habit.total_days }})</span>
-        </div>
+        </div>                          
         <form action="{% url 'habits:habit_status_update' habit.today_status.id %}" method="post" style="display:inline;">
             {% csrf_token %}
             <button type="submit" class="habit-status-btn">
@@ -25,5 +25,8 @@
         <a href="{% url 'habits:delete_habit' habit.pk %}" class="btn btn-outline-danger">Удалить</a>
     </div>
 {% endfor %}
+<div class="text-center mt-5">
+<a href="{% url "habits:add_habit" %}" class="btn btn-outline-secondary">Добавить привычку</a>
+</div>
 {% endblock content %}
 
