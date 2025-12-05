@@ -1,4 +1,4 @@
-# tracker/basic/templatetags/custom_filters.py
+# tracker/goals/templatetags/custom_filters.py
 from django import template
 register = template.Library()
 

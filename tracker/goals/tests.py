@@ -3,9 +3,9 @@ from datetime import timedelta
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.utils import timezone
-from basic.models import  GeneralGoal, TemporalGoal
-from basic.service.general_service import StatsService, StatsFormatter
-from basic.service.goal_service import GoalService
+from goals.models import  GeneralGoal, TemporalGoal
+from goals.service.general_service import StatsService, StatsFormatter
+from goals.service.goal_service import GoalService
 from habits.models import Habit, HabitStatus
 
 class UseGeneralServiceTest(TestCase):

@@ -10,10 +10,10 @@ from .service.general_service import StatsService
 from .service.goal_service import GoalService
 
 def home(request):
-    return render(request, 'basic/core/home.html', )
+    return render(request, 'goals/core/home.html', )
 
 class Profile(TemplateView):
-    template_name = 'basic/core/profile.html'
+    template_name = 'goals/core/profile.html'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         stats = StatsService.get_all_user_stats(self.request.user)
@@ -28,17 +28,17 @@ class Profile(TemplateView):
 class DeleteTemporalGoal(LoginRequiredMixin,DeleteView):
     model = TemporalGoal
     success_url = reverse_lazy('temporal_goals')
-    template_name = 'basic/temporal_goal_htmls/temporal_goal_delete.html'
+    template_name = 'goals/temporal_goal_htmls/temporal_goal_delete.html'
 
 class UpdateTemporalGoal(UserObjectsMixin,LoginRequiredMixin, UpdateView):
     model = TemporalGoal
     success_url = reverse_lazy('temporal_goals')
-    template_name = 'basic/temporal_goal_htmls/add_temporal_goal.html'
+    template_name = 'goals/temporal_goal_htmls/add_temporal_goal.html'
     fields = ['name','general_goal','deadline']
 
 class TemporalGoals(UserObjectsMixin,LoginRequiredMixin,ListView):
     model = TemporalGoal
-    template_name = 'basic/temporal_goal_htmls/temporal_goal.html'
+    template_name = 'goals/temporal_goal_htmls/temporal_goal.html'
     context_object_name = 'goals'
     login_url = 'users:login'
     paginate_by = 5
@@ -51,7 +51,7 @@ class TemporalGoalCheck(LoginRequiredMixin, View):
 
 class TemporalGoalDetail(LoginRequiredMixin, DetailView,UserObjectsMixin): # вот это God Method
     model = TemporalGoal
-    template_name = 'basic/temporal_goal_htmls/temporal_goal_detail.html'
+    template_name = 'goals/temporal_goal_htmls/temporal_goal_detail.html'
     context_object_name = 'goal'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -64,7 +64,7 @@ class TemporalGoalDetail(LoginRequiredMixin, DetailView,UserObjectsMixin): # в�
 
 class AddTemporalGoal(LoginRequiredMixin, CreateView):
     model = TemporalGoal
-    template_name = 'basic/temporal_goal_htmls/add_temporal_goal.html'
+    template_name = 'goals/temporal_goal_htmls/add_temporal_goal.html'
     success_url = reverse_lazy('temporal_goals')
     form_class = AddTgoal
     def form_valid(self, form):
@@ -73,14 +73,14 @@ class AddTemporalGoal(LoginRequiredMixin, CreateView):
 
 class GeneralGoals(UserObjectsMixin,LoginRequiredMixin,ListView):
     model = GeneralGoal
-    template_name = 'basic/general_goal/general_goals.html'
+    template_name = 'goals/general_goal/general_goals.html'
     context_object_name = 'goals'
     login_url = 'users:login'
     paginate_by = 5
 
 class GeneralGoalAdd(LoginRequiredMixin, CreateView):
     model = GeneralGoal
-    template_name = 'basic/general_goal/add_general_goal.html'
+    template_name = 'goals/general_goal/add_general_goal.html'
     form_class = AddGeneralGoal
     success_url = reverse_lazy('general_goals')
     def form_valid(self, form):
@@ -89,18 +89,18 @@ class GeneralGoalAdd(LoginRequiredMixin, CreateView):
 
 class GeneralGoalDelete(LoginRequiredMixin, DeleteView):
     model = GeneralGoal
-    template_name = 'basic/general_goal/delete_general_goal.html'
+    template_name = 'goals/general_goal/delete_general_goal.html'
     success_url = reverse_lazy('general_goals')
 
 class GeneralGoalUpdate(LoginRequiredMixin, UpdateView):
     model = GeneralGoal
-    template_name = 'basic/general_goal/add_general_goal.html'
+    template_name = 'goals/general_goal/add_general_goal.html'
     success_url = reverse_lazy('general_goals')
     fields = ['name','description','main_goal','theme']
 
 class GeneralGoalDetail(LoginRequiredMixin, DetailView,UserObjectsMixin):
     model = GeneralGoal
-    template_name = 'basic/general_goal/general_goal.html'
+    template_name = 'goals/general_goal/general_goal.html'
     context_object_name = 'goal'
     def get_context_data(self,**kwargs):
         context = super().get_context_data(**kwargs)
@@ -114,11 +114,11 @@ class GeneralGoalCheck(LoginRequiredMixin, View):
         return redirect('general_goals')
 
 def settings(request):
-    return render(request, 'basic/core/settings.html')
+    return render(request, 'goals/core/settings.html')
 
 class CreateTheme(LoginRequiredMixin, CreateView):
     model = Theme
-    template_name = 'basic/core/theme.html'
+    template_name = 'goals/core/theme.html'
     form_class = CreateTheme
     success_url = reverse_lazy('home')
     def form_valid(self, form):
