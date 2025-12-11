@@ -4,7 +4,7 @@
 {% for goal in goals %}
 <div class="habit-item" style="background-color:
 {{ goal.theme.color }}40; border-left: 4px solid {{ goal.theme.color }}">
-    <a href="{% url 'general_goals_detail' goal.pk %}" class="text-decoration-none text-dark">
+    <a href="{{ goal.get_absolute_url }}" class="text-decoration-none text-dark">
         {{ goal.name }}
     </a>
         <span>

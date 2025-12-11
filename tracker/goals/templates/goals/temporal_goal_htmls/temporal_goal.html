@@ -4,7 +4,7 @@
 <div>
 {% for goal in goals %}                             
 <div class="habit-item" style="background-color: {{ goal.general_goal.theme.color }}40; border-left: 4px solid {{ goal.general_goal.theme.color }}">
-    <a href="{% url 'temporal_goal_detail' goal.pk %}" class="text-decoration-none text-dark">
+    <a href="{{ goal.get_absolute_url }}" class="text-decoration-none text-dark">
         <span>{{ goal.name }}</span>
         <span class="habit-deadline">{{ goal.deadline|date:"M. j, Y" }}</span>
     </a>
