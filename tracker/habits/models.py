@@ -13,7 +13,8 @@ class Habit(models.Model):
     objects = models.Manager()
     class Meta:
         ordering = ['-created_at']
-        app_label = 'habits'
+        verbose_name = 'Привычки'
+        verbose_name_plural = 'Привычки'
     def __str__(self):
         return self.name
 
@@ -25,6 +26,5 @@ class HabitStatus(models.Model):
     objects = models.Manager()
     class Meta:
         unique_together = ('habit', 'date')
-        app_label = 'habits'
     def __str__(self):
         return self.habit.name

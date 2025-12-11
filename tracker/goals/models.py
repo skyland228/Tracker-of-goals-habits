@@ -3,7 +3,7 @@ from django.db import models
 from django.urls import reverse
 
 class TemporalGoal(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50,verbose_name='Название')
     description = models.TextField(blank=True)
     user = models.ForeignKey(
         get_user_model(), on_delete=models.SET_NULL,
@@ -16,6 +16,9 @@ class TemporalGoal(models.Model):
     objects = models.Manager()
     class Meta:
         ordering = ['deadline']
+        verbose_name = 'Временные цели'
+        verbose_name_plural = 'Временные цели'
+        
     def __str__(self):
         return self.name
     def get_absolute_url(self):
@@ -23,7 +26,7 @@ class TemporalGoal(models.Model):
     
 
 class GeneralGoal(models.Model):
-    name =  models.CharField(max_length=50)
+    name =  models.CharField(max_length=50,verbose_name='Название')
     description = models.TextField(blank=True)
     user = models.ForeignKey(
         get_user_model(), on_delete=models.SET_NULL,
@@ -40,6 +43,8 @@ class GeneralGoal(models.Model):
         return self.temporal_goal.filter(is_completed=False)
     class Meta:
         ordering = ['name']
+        verbose_name = 'Основные цели'
+        verbose_name_plural = 'Основные цели'
     def __str__(self):
         return self.name
     def get_absolute_url(self):
