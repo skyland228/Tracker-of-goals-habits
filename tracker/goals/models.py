@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.urls import reverse
 
 class TemporalGoal(models.Model):
     name = models.CharField(max_length=50)
@@ -17,6 +18,9 @@ class TemporalGoal(models.Model):
         ordering = ['deadline']
     def __str__(self):
         return self.name
+    def get_absolute_url(self):
+        return reverse("temporal_goal_detail", kwargs={"pk": self.pk})
+    
 
 class GeneralGoal(models.Model):
     name =  models.CharField(max_length=50)
@@ -38,3 +42,6 @@ class GeneralGoal(models.Model):
         ordering = ['name']
     def __str__(self):
         return self.name
+    def get_absolute_url(self):
+        return reverse("general_goals_detail", kwargs={"pk": self.pk})
+    
