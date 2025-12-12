@@ -5,5 +5,6 @@ def get_menu(request):
             {'title': 'Привычки', 'url_name': 'habits:habits'},
             {'title': 'Основные Цели', 'url_name': 'general_goals'},
             {'title': 'Подцели', 'url_name': 'temporal_goals'},
+            {'title': 'Статистика', 'url_name': 'users:statistics'},
         ]
     }

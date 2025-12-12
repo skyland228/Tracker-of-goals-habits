@@ -5,9 +5,10 @@ from django.views.generic import CreateView, TemplateView
 from django.contrib.auth.forms import AuthenticationForm
 from goals.service.general_service import StatsService
 from .forms import RegisterUserForm
+from .models import Profile
 
 class LoginUser(LoginView):
-    form_class = AuthenticationForm # я использую кастомные формы только для замены меток для полей зачем
+    form_class = AuthenticationForm 
     template_name = 'users/login.html'
     extra_context = {'title': 'Авторизация',}
 
@@ -17,14 +18,21 @@ class RegisterUser(CreateView):
     extra_context = {'title': 'Регистрация'}
     success_url = reverse_lazy('users:login')
 
-class Profile(TemplateView):
-    template_name = 'core/profile.html'
+class ProfileUser(TemplateView):
+    template_name = 'users/profile.html'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         stats = StatsService.calculate_stats(self.request.user)
+        profile = Profile.objects.get(user=self.request.user)  # или get_object_or_404
         context.update({
-            'user': self.request.user,
-            'today_progress': stats['today_progress'],
-            'total_progress': stats['total_progress'],
-            'streak': stats['streak']})
+            'profile': profile,
+            'user': self.request.user})
         return context
+    
+class Statistics(TemplateView):
+    template_name = 'users/statistics.html'
+    def get_context_data(self, **kwargs):
+        stats = StatsService.calculate_stats(self.request.user)
+        context = super().get_context_data(**kwargs)   
+        context.update({'stats':stats})  
+        return context 

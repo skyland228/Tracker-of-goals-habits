@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- goals/profile.html -->
+<div class="profile">
+    <h2>Профиль пользователя: {{ user.username }}</h2>
+    <img src="{{ profile.image.url }}" style="width: 160px; height: 160px; object-fit: cover;">
+    <div class="progress-info">
+        <h3>📊 Ваш прогресс</h3>
+    </div>
+
+</div>
+{% endblock %}

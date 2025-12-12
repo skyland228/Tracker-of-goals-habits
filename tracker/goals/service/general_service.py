@@ -11,7 +11,6 @@ class StatsService:
         # и вот тут уже мы начинаем добавлять поля
         total=Count('id'),
         completed = Count('id', filter=Q(is_completed = True))) 
-        current_date = timezone.now().date() # получаем текущию дату
         streak = 0
         for stat in all_statuses:
             date = stat['date']
@@ -27,6 +26,21 @@ class StatsService:
                     streak += 1
                 else:   
                     break
+        max_streak = 0
+        for stat in all_statuses:
+            date = stat['date']
+            total = stat['total']
+            completed = stat['completed']
+            if date == timezone.now().date():
+                if total > 0 and total == completed:
+                    max_streak +=1
+                else:
+                    continue
+            if date != timezone.now().date():
+                if total > 0 and total == completed:
+                    max_streak += 1
+                else:
+                    max_streak = 0
         stats = HabitStatus.objects.filter(habit__user = user).aggregate(
             today_total = Count('id', filter=Q(date = timezone.now().date())),
             today_completed = Count('id', filter=Q(date = timezone.now().date(), is_completed = True)),
@@ -43,4 +57,5 @@ class StatsService:
             'total_progress':{
                 'completed': total_completed_value,
                 'total': total_all_value,
-                'percentage': percentage}}
+                'percentage': percentage,
+            },'max_streak': max_streak}

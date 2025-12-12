@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Progress</h2>
+<div class="progress-info">
+  <h5>Сегодняшний прогресс</h5>
+  <p>{{ stats.today_progress.completed }} / {{ stats.today_progress.total }}</p>
+</div>
+<div class="progress-info">
+  <h5>Общий прогресс</h5>
+  <p>{{ stats.total_progress.percentage }} %</p>
+</div>
+<div class="streak">
+    🔥 {{ stats.streak }} дней подряд
+</div>
+<div>
+  {{ stats.max_streak}} Наилучший стрик
+</div>
+{% endblock content %}
+

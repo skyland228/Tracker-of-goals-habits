@@ -96,10 +96,10 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR /  "goals/static",  # или BASE_DIR /
 ]
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media') 
+MEDIA_URL = '/media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 AUTH_PASSWORD_VALIDATORS = []
-
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'users:login'
