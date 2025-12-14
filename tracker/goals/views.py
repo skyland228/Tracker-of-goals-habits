@@ -4,25 +4,11 @@ from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import ListView, DetailView, TemplateView, UpdateView, CreateView, DeleteView
 from .Mixin import UserObjectsMixin
-from .forms import  AddTgoal, AddGeneralGoal, CreateTheme
-from .models import  GeneralGoal, TemporalGoal,  Theme
+from .forms import  AddTgoal, AddGeneralGoal
+from .models import  GeneralGoal, TemporalGoal
 from .service.general_service import StatsService
 from .service.goal_service import GoalService
 
-def home(request):
-    return render(request, 'goals/core/home.html', )
-
-class Profile(TemplateView):
-    template_name = 'goals/core/profile.html'
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        stats = StatsService.calculate_stats(self.request.user)
-        context.update({
-            'user': self.request.user,
-            'today_progress': stats['today_progress'],
-            'total_progress': stats['total_progress'],
-            'streak': stats['streak']})
-        return context
 
 
 class DeleteTemporalGoal(LoginRequiredMixin,DeleteView):
@@ -107,20 +93,9 @@ class GeneralGoalDetail(LoginRequiredMixin, DetailView,UserObjectsMixin):
         goal = self.object  
         context['progress'] = GoalService.progress_of_goal(goal)
         return context
+    
 class GeneralGoalCheck(LoginRequiredMixin, View):
     def post(self, request, pk):
         goal = get_object_or_404(GeneralGoal, pk=pk, user=request.user)
         GoalService.toggle_goal_completion(goal)
         return redirect('general_goals')
-
-def settings(request):
-    return render(request, 'goals/core/settings.html')
-
-class CreateTheme(LoginRequiredMixin, CreateView):
-    model = Theme
-    template_name = 'goals/core/theme.html'
-    form_class = CreateTheme
-    success_url = reverse_lazy('home')
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super().form_valid(form)

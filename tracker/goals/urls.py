@@ -3,11 +3,6 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.home, name = 'home'),
-    path('profile/', views.Profile.as_view(), name='profile'),
-    path('settings/', views.settings, name='settings'),
-    path('theme/create/', views.CreateTheme.as_view(), name='theme_create'),
-
     # {% block 'temporal_goals' %}
     path('temporal_goals/', views.TemporalGoals.as_view(), name='temporal_goals'),
     path('temp_status/<int:pk>/update/', views.TemporalGoalCheck.as_view(), name='temporal_update'),

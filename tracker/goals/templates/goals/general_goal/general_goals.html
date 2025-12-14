@@ -21,7 +21,7 @@
             {% endif %}
         </form>
     </span>
-<p><a href="{% url 'general_goal_update' goal.pk %}" class="btn btn-outline-secondary">Редактировать</a></p>
+    <a href="{% url 'general_goal_update' goal.pk %}" class="btn btn-outline-secondary">Редактировать</a>
     <a href="{% url 'delete_general_goal' goal.pk %}" class="btn btn-outline-danger">
         Удалить
     </a>

@@ -400,7 +400,7 @@ body {
     color: #6a1b9a; /* Фиолетовый */
     border-left-color: #7b1fa2; /* Светло-фиолетовый */
 }
-.streak {
+.streak {                                                                                                                                           
     background: linear-gradient(135deg, #ff6b35, #ff8e53);
     color: white;
     padding: 15px 30px;
@@ -410,8 +410,13 @@ body {
     text-align: center;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
-
-.content {
+.btn-sm {
+    min-height: 31px;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    line-height: 1.3;
+}
+.content {  
     margin-left: 220px; /* Ширина меню (200px) + отступ (20px) */
     padding: 60px;
     min-height: calc(100vh - 60px); /* 100% высоты минус шапка */

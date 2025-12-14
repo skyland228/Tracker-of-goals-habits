@@ -17,16 +17,15 @@ class StatsService:
             date = stat['date']
             total = stat['total']
             completed = stat['completed']
-            if date == current_date:# сегодня
-                if total > 0 and total == completed: #если все выполненно уже сегодня
+            if date == timezone.now().date():
+                if total > 0 and total == completed:
                     streak +=1
-                    current_date -= timedelta(days = 1)    # ну если, выполнили и день = сегодня до день уменьшаем
-                # ничего не делаем день еще не кончился
-            else:
-                if date == current_date - timedelta(days = 1) and total > 0 and total == completed: # день раньше чем сегодня все уже нет времени выполнить, то есть или да, или рвем стрик
-                    streak += 1
-                    current_date -= timedelta(days = 1)
                 else:
+                    continue
+            if date != timezone.now().date():
+                if total > 0 and total == completed:
+                    streak += 1
+                else:   
                     break
         stats = HabitStatus.objects.filter(habit__user = user).aggregate(
             today_total = Count('id', filter=Q(date = timezone.now().date())),
