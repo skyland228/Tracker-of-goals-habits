@@ -4,11 +4,9 @@ from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import ListView, DetailView, TemplateView, UpdateView, CreateView, DeleteView
 from .Mixin import UserObjectsMixin
-from .forms import  AddTgoal, AddGeneralGoal
 from .models import  GeneralGoal, TemporalGoal
-from .service.general_service import StatsService
 from .service.goal_service import GoalService
-
+from .forms import AddGeneralGoal, AddTgoal
 
 
 class DeleteTemporalGoal(LoginRequiredMixin,DeleteView):
@@ -50,9 +48,13 @@ class TemporalGoalDetail(LoginRequiredMixin, DetailView,UserObjectsMixin): # Ð²Ð
 
 class AddTemporalGoal(LoginRequiredMixin, CreateView):
     model = TemporalGoal
-    template_name = 'goals/temporal_goal_htmls/add_temporal_goal.html'
+    template_name = 'goals/temporal_goal_htmls/temporal_goal_add.html'
     success_url = reverse_lazy('temporal_goals')
     form_class = AddTgoal
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
@@ -66,9 +68,13 @@ class GeneralGoals(UserObjectsMixin,LoginRequiredMixin,ListView):
 
 class GeneralGoalAdd(LoginRequiredMixin, CreateView):
     model = GeneralGoal
-    template_name = 'goals/general_goal/add_general_goal.html'
+    template_name = 'goals/general_goal/general_goal_add.html'
     form_class = AddGeneralGoal
     success_url = reverse_lazy('general_goals')
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)

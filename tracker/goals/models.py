@@ -1,6 +1,10 @@
+from datetime import date, timedelta
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.urls import reverse
+
+def default_deadline():
+    return date.today() + timedelta(days=30)
 
 class TemporalGoal(models.Model):
     name = models.CharField(max_length=50,verbose_name='Название')
@@ -8,7 +12,7 @@ class TemporalGoal(models.Model):
     user = models.ForeignKey(
         get_user_model(), on_delete=models.SET_NULL,
         related_name='temporal_goals', null=True, verbose_name='Пользователь')
-    deadline = models.DateField(blank = True, default='1999-11-22')  # Обязательное поле срока выполнения
+    deadline = models.DateField(default=default_deadline)  # Обязательное поле срока выполнения
     is_completed = models.BooleanField(default=False)  # Добавляем поле is_completed
     general_goal = models.ForeignKey("GeneralGoal",on_delete = models.SET_NULL,
                                      related_name='temporal_goal', null=True,
@@ -19,6 +23,8 @@ class TemporalGoal(models.Model):
         verbose_name = 'Временные цели'
         verbose_name_plural = 'Временные цели'
         
+    def func():
+        return 1
     def __str__(self):
         return self.name
     def get_absolute_url(self):

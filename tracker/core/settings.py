@@ -2,12 +2,12 @@
 import os
 from pathlib import Path
 from django.conf.global_settings import LOGOUT_REDIRECT_URL
-
+from dotenv import load_dotenv
+load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-k-$2c1upkr%r-x5*s4wk#cj=_a**)ye9k^p$9f^3fh_wb$l540'
-
-DEBUG = True
+SECRET_KEY = os.environ.get('SECRET_KEY')
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = []
 
@@ -46,14 +46,14 @@ ROOT_URLCONF = 'core.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],  # путь к папке templates
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'core.context_processors.get_menu', # прописываем вот контекст процессор так как это уникальное для проекта
+                'core.context_processors.get_menu', 
             ],
         },
     },
@@ -94,7 +94,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
-    BASE_DIR /  "goals/static",  # или BASE_DIR /
+    BASE_DIR /  "goals/static",  
 ]
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media') 
 MEDIA_URL = '/media/'

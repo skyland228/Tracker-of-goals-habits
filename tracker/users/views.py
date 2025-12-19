@@ -22,7 +22,6 @@ class ProfileUser(TemplateView):
     template_name = 'users/profile.html'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        stats = StatsService.calculate_stats(self.request.user)
         profile = Profile.objects.get(user=self.request.user)  # или get_object_or_404
         context.update({
             'profile': profile,

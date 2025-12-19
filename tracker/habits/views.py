@@ -1,14 +1,14 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
 from django.views.generic import ListView,UpdateView,DeleteView, CreateView
-from habits.forms import HabitStatusForm, AddHabit
 from .models import Habit, HabitStatus
 from .services.habit_service import HabitServices
 from django.urls import reverse_lazy
+from .forms import AddHabit, HabitStatusForm
 
 class Habits(LoginRequiredMixin, ListView):
   model = Habit
-  template_name = 'habits/Habits.html'
+  template_name = 'habits/habits.html'
   context_object_name = 'habits'
   login_url = 'users:login'
 
@@ -18,8 +18,13 @@ class Habits(LoginRequiredMixin, ListView):
 class AddHabit(LoginRequiredMixin, CreateView):
   model = Habit
   form_class = AddHabit
-  template_name = 'habits/add_habit.html'
+  template_name = 'habits/habit_add.html'
   success_url = reverse_lazy('habits:habits')
+
+  def get_form_kwargs(self):
+    kwargs = super().get_form_kwargs()
+    kwargs['user'] = self.request.user
+    return kwargs
 
   def form_valid(self, form):
     form.instance.user = self.request.user # назначаем пользователя для привычки
@@ -32,7 +37,7 @@ class DeleteHabit(LoginRequiredMixin, DeleteView):
 
 class UpdateHabit(LoginRequiredMixin, UpdateView):
   model = Habit
-  template_name = 'habits/add_habit.html'
+  template_name = 'habits/habit_add.html'
   fields = ['name', 'goal']
   success_url = reverse_lazy('habits:habits')
 
