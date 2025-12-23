@@ -10,8 +10,10 @@ class StatsService:
             'date').order_by('-date').annotate(
         # и вот тут уже мы начинаем добавлять поля
         total=Count('id'),
-        completed = Count('id', filter=Q(is_completed = True))) 
+        completed = Count('id', filter=Q(is_completed = True))
+        ) 
         streak = 0
+
         for stat in all_statuses:
             date = stat['date']
             total = stat['total']
@@ -24,23 +26,22 @@ class StatsService:
             if date != timezone.now().date():
                 if total > 0 and total == completed:
                     streak += 1
-                else:   
+                else: 
                     break
+        reversed_statuses = all_statuses[::-1]  # [::-1] переворачивает список
+        current_streak = 0
         max_streak = 0
-        for stat in all_statuses:
+        for stat in reversed_statuses:
             date = stat['date']
             total = stat['total']
             completed = stat['completed']
-            if date == timezone.now().date():
-                if total > 0 and total == completed:
-                    max_streak +=1
-                else:
-                    continue
-            if date != timezone.now().date():
-                if total > 0 and total == completed:
-                    max_streak += 1
-                else:
-                    max_streak = 0
+            if total > 0 and total == completed:
+                current_streak +=1
+                if current_streak > max_streak:
+                    max_streak = current_streak 
+            else:
+                current_streak = 0
+        
         stats = HabitStatus.objects.filter(habit__user = user).aggregate(
             today_total = Count('id', filter=Q(date = timezone.now().date())),
             today_completed = Count('id', filter=Q(date = timezone.now().date(), is_completed = True)),

@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, TemplateView
 from django.contrib.auth.forms import AuthenticationForm
-from goals.service.general_service import StatsService
+from users.services.general_service import StatsService
 from .forms import RegisterUserForm
 from .models import Profile
 

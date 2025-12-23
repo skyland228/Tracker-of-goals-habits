@@ -1,20 +1,27 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Progress</h2>
-<div class="progress-info">
-  <h5>Сегодняшний прогресс</h5>
-  <p>{{ stats.today_progress.completed }} / {{ stats.today_progress.total }}</p>
-</div>
-<div class="progress-info">
-  <h5>Общий прогресс</h5>
-  <p>{{ stats.total_progress.percentage }} %</p>
-</div>
-<div class="streak">
-    🔥 {{ stats.streak }} дней подряд
-</div>
-<div>
-  {{ stats.max_streak}} Наилучший стрик
+<div class="stats-container">
+  <div class="stat-box">
+    <div class="stat-value">{{ stats.today_progress.completed }}/{{ stats.today_progress.total }}</div>
+    <div class="stat-label">Сегодняшний прогресс</div>
+  </div>
+  
+  <div class="stat-box">
+    <div class="stat-value">{{ stats.total_progress.completed }}/{{ stats.total_progress.total }}</div>
+    <div class="stat-label">Общий прогресс</div>
+    <div class="percentage">{{ stats.total_progress.percentage }}%</div>
+  </div>
+  
+  <div class="stat-box">
+    <div class="stat-value">{{ stats.streak }}</div>
+    <div class="stat-label">дней подряд</div>
+  </div>
+  
+  <div class="stat-box">
+    <div class="stat-value">{{ stats.max_streak }}</div>
+    <div class="stat-label">Больше всего дней подряд</div>
+  </div>
 </div>
 {% endblock content %}
 

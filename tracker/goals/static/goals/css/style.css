@@ -217,7 +217,61 @@ body {
     border-radius: 12px;
     margin: 20px 0;
 }
+/* Простой вариант */
+.stats-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+}
 
+.stat-box {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    min-width: 200px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: 2px solid #e0e0e0;
+}
+
+.stat-value {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #4a90e2;
+    margin: 10px 0;
+}
+.percentage {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #50e3c2;
+    margin: 8px 0;
+    background: rgba(80, 227, 194, 0.1);
+    padding: 5px 10px;
+    border-radius: 20px;
+    display: inline-block;
+}
+.stat-label {
+    color: #666;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.stat-box:nth-child(1) {
+    border-top: 4px solid #4a90e2;
+}
+
+.stat-box:nth-child(2) {
+    border-top: 4px solid #50e3c2;
+}
+
+.stat-box:nth-child(3) {
+    border-top: 4px solid #f5a623;
+}
+.stat-box:nth-child(4) {
+    border-top: 4px solid #9013fe;
+}
 .form-group {
     display: flex;
     align-items: center;

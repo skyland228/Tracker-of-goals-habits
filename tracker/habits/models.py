@@ -13,6 +13,7 @@ class Habit(models.Model):
     objects = models.Manager()
     class Meta:
         ordering = ['-created_at']
+
         verbose_name = 'Привычки'
         verbose_name_plural = 'Привычки'
     def __str__(self):
