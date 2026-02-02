@@ -9,7 +9,7 @@ from goals.service.goal_service import GoalService
 from habits.models import Habit, HabitStatus
 
 class UseGeneralServiceTest(TestCase):
-    def test_streak(self): # по сути это в core
+    def test_streak(self):
         """Тест расчета серии при последовательном выполнении привычки 5 дней подряд"""
         username = f'testuser_{uuid.uuid4().hex[:8]}'
         user = get_user_model().objects.create_user(username)
@@ -23,7 +23,7 @@ class UseGeneralServiceTest(TestCase):
         streak = StatsService.calculate_streak_simple(user)
         self.assertEqual(streak, 5)
 
-    def test_streak_break(self): # это тоже core
+    def test_streak_break(self): 
         """Стрик должен прерваться при пропуске ВЧЕРАШНЕГО дня"""
         username = f'testuser_{uuid.uuid4().hex[:8]}'
         user = get_user_model().objects.create_user(username)
@@ -41,7 +41,7 @@ class UseGeneralServiceTest(TestCase):
         streak = StatsService.calculate_streak_simple(user)
         self.assertEqual(streak, 0)  # Стрик должен быть 0 из-за пропуска вчера
 
-    def test_streak_with_today_incomplete(self): #core
+    def test_streak_with_today_incomplete(self): 
         """Проверяем как ведет себя стрик, когда сегодня выполнены не все привычки"""
         username = f'testuser_{uuid.uuid4().hex[:8]}'
         user = get_user_model().objects.create_user(username)

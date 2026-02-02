@@ -37,7 +37,7 @@ class GeneralGoal(models.Model):
     is_completed = models.BooleanField(default=False)  # Добавляем поле is_completed
     main_goal = models.OneToOneField('TemporalGoal',on_delete=models.SET_NULL, null = True, blank=True,
                                      related_name='is_main_for', verbose_name='Главная подцель')
-    theme = models.ForeignKey('core.Theme', on_delete=models.SET_NULL, null=True, blank=True)
+    theme = models.ForeignKey('appearance.Theme', on_delete=models.SET_NULL, null=True, blank=True)
     objects = models.Manager()
 
     def completed_goals(self):
