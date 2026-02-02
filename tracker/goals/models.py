@@ -22,9 +22,6 @@ class TemporalGoal(models.Model):
         ordering = ['deadline']
         verbose_name = 'Временные цели'
         verbose_name_plural = 'Временные цели'
-        
-    def func():
-        return 1
     def __str__(self):
         return self.name
     def get_absolute_url(self):
@@ -35,8 +32,8 @@ class GeneralGoal(models.Model):
     name =  models.CharField(max_length=50,verbose_name='Название')
     description = models.TextField(blank=True)
     user = models.ForeignKey(
-        get_user_model(), on_delete=models.SET_NULL,
-        related_name='general_goals', null=True, verbose_name='Пользователь', )
+        get_user_model(), on_delete=models.PROTECT,
+        related_name='general_goals', verbose_name='Пользователь', )
     is_completed = models.BooleanField(default=False)  # Добавляем поле is_completed
     main_goal = models.OneToOneField('TemporalGoal',on_delete=models.SET_NULL, null = True, blank=True,
                                      related_name='is_main_for', verbose_name='Главная подцель')

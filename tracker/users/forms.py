@@ -4,6 +4,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.core.exceptions import ValidationError
 
+from users.models import Profile
+
 class RegisterUserForm(UserCreationForm):
 
     password1 = forms.CharField(widget=forms.PasswordInput(), label = "Пароль")
@@ -28,3 +30,33 @@ class RegisterUserForm(UserCreationForm):
         if not (re.search('[A-Z]', password)):
             raise ValidationError('password must to contain a capital letter')
         return password
+
+class ChangeProfileForm(forms.ModelForm):
+    image = forms.ImageField(required=False, label="Фото")
+    first_name = forms.CharField(label="Имя")
+    last_name = forms.CharField(label="Фамилия")
+    email = forms.EmailField(label="Email")
+    bio = forms.CharField(label="Биография", widget=forms.Textarea)
+    class Meta:
+        model = get_user_model()
+        fields = ['image','first_name', 'last_name',  'bio','email']
+
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs)
+        if self.instance and hasattr(self.instance, 'profile'):
+            profile = self.instance.profile
+            self.fields['image'].initial = profile.image
+            self.fields['bio'].initial = profile.bio
+def save(self, commit = True):
+    user = super().save()
+    if user.pk:
+        profile, created = Profile.objects.get_or_create(user=user)
+        if self.cleaned_data.get('image'):
+            if profile.image:
+                profile.image.delete(save=False)
+            profile.image = self.cleaned_data['image']
+
+        profile.bio = self.cleaned_data.get('bio', '')
+        if commit:
+            profile.save()
+    return user

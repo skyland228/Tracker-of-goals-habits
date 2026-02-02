@@ -1,11 +1,9 @@
-
 import os
 from pathlib import Path
-from django.conf.global_settings import LOGOUT_REDIRECT_URL
 from dotenv import load_dotenv
 load_dotenv()
-BASE_DIR = Path(__file__).resolve().parent.parent
 
+BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
@@ -22,6 +20,7 @@ INSTALLED_APPS = [
     'goals',
     'core',
     'habits',
+    'rest_framework',
 ]
 
 DATABASES = {

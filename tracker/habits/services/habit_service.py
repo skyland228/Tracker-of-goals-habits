@@ -36,6 +36,7 @@ class HabitServices:
         
         if statuses_to_create:
             HabitStatus.objects.bulk_create(statuses_to_create, batch_size=100)
+
     def get_user_habit_stats(user):
         today = date.today()
         HabitServices.ensure_habit_statuses_exist(user)
@@ -47,6 +48,7 @@ class HabitServices:
             habit.habit_progress = int((habit.completed_days / habit.total_days) * 100) if habit.total_days > 0 else 0
             habit.today_status = habit.today_statuses[0] if habit.today_statuses else None
         return habits
+    
     def change_status(status): # делает смену статуса
         status.is_completed = not status.is_completed
         status.save() 
