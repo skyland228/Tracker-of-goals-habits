@@ -18,14 +18,6 @@ class RegisterUser(CreateView):
     extra_context = {'title': 'Регистрация'}
     success_url = reverse_lazy('users:login')
 
-class ProfileUser(LoginRequiredMixin, UpdateView):
-    form_class = ChangeProfileForm
-    template_name = 'users/profile.html'
-    model = get_user_model()
-    success_url = reverse_lazy('users:profile')
-    def get_object(self):
-        return self.request.user
-
 class Statistics(TemplateView):
     template_name = 'users/statistics.html'
     def get_context_data(self, **kwargs):
@@ -33,3 +25,11 @@ class Statistics(TemplateView):
         context = super().get_context_data(**kwargs)   
         context.update({'stats':stats})  
         return context 
+    
+class Profile(UpdateView):
+    form_class = ChangeProfileForm
+    template_name = 'users/profile.html'
+    success_url = reverse_lazy('users:profile')
+
+    def get_object(self, queryset = None):
+        return self.request.user

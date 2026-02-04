@@ -4,7 +4,6 @@ from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.core.exceptions import ValidationError
 
-from users.models import Profile
 
 class RegisterUserForm(UserCreationForm):
 
@@ -13,7 +12,7 @@ class RegisterUserForm(UserCreationForm):
 
     class Meta:
         model = get_user_model()
-        fields = ['username','email','first_name','last_name','password1','password2']
+        fields = ['username','email','password1','password2']
         labels = {
             'username': 'Логин',
             'first_name': 'Имя',
@@ -32,31 +31,8 @@ class RegisterUserForm(UserCreationForm):
         return password
 
 class ChangeProfileForm(forms.ModelForm):
-    image = forms.ImageField(required=False, label="Фото")
-    first_name = forms.CharField(label="Имя")
-    last_name = forms.CharField(label="Фамилия")
-    email = forms.EmailField(label="Email")
-    bio = forms.CharField(label="Биография", widget=forms.Textarea)
+    image = forms.ImageField(required=False)
+    bio = forms.CharField(required = False, widget=forms.Textarea)
     class Meta:
         model = get_user_model()
-        fields = ['image','first_name', 'last_name',  'bio','email']
-
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
-        if self.instance and hasattr(self.instance, 'profile'):
-            profile = self.instance.profile
-            self.fields['image'].initial = profile.image
-            self.fields['bio'].initial = profile.bio
-def save(self, commit = True):
-    user = super().save()
-    if user.pk:
-        profile, created = Profile.objects.get_or_create(user=user)
-        if self.cleaned_data.get('image'):
-            if profile.image:
-                profile.image.delete(save=False)
-            profile.image = self.cleaned_data['image']
-
-        profile.bio = self.cleaned_data.get('bio', '')
-        if commit:
-            profile.save()
-    return user
+        fields = ['first_name','last_name','image','email','bio']

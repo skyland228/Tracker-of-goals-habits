@@ -15,6 +15,3 @@ class AuthorizationTest(TestCase):
     '''Тестирование регистрации пользователя с паролем без заглавной буквы'''
     form = RegisterUserForm(self.data)
     self.assertFormError(form, 'password2', 'password must to contain a capital letter') # тут полная проверка
-
-def test_profile():
-  pass
