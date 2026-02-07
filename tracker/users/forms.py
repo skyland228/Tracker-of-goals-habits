@@ -31,8 +31,8 @@ class RegisterUserForm(UserCreationForm):
         return password
 
 class ChangeProfileForm(forms.ModelForm):
-    image = forms.ImageField(required=False)
-    bio = forms.CharField(required = False, widget=forms.Textarea)
+    image = forms.ImageField(required = False)
+    bio   = forms.CharField (required = False, widget = forms.Textarea)
     class Meta:
         model = get_user_model()
         fields = ['first_name','last_name','image','email','bio']

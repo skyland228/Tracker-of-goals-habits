@@ -1,11 +1,13 @@
 from django.contrib.auth.views import LoginView 
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
+from .models import TelegramLinkToken
 from django.views.generic import CreateView, TemplateView, UpdateView
 from django.contrib.auth.forms import AuthenticationForm
 from users.services.general_service import StatsService
 from .forms import RegisterUserForm, ChangeProfileForm
-from django.contrib.auth import get_user_model
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
+
 
 class LoginUser(LoginView):
     form_class = AuthenticationForm 
@@ -33,3 +35,9 @@ class Profile(UpdateView):
 
     def get_object(self, queryset = None):
         return self.request.user
+    
+@login_required
+def connect_telegram(request):
+    token_obj = TelegramLinkToken.create_token(request.user)
+    link = f'https://t.me/skylandbot_bot?start={token_obj.token}'
+    return redirect(link)
