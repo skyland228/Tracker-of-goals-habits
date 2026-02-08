@@ -9,5 +9,5 @@ urlpatterns = [
     path('register/', views.RegisterUser.as_view(), name = 'register'),
     path('statistics/', views.Statistics.as_view(), name = 'statistics'),
     path('profile/', views.Profile.as_view(), name = 'profile'),
-    path('connect-telegram/', views.connect_telegram, name='connect_telegram')
+    path('connect-telegram/', views.connect_telegram, name='connect_telegram'),
 ]

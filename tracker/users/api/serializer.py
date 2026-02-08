@@ -6,3 +6,7 @@ class UserSerializer(serializers.ModelSerializer):
     model = get_user_model()
     fields = ['username','date_joined']
     
+class TelegramConnectSerializer(serializers.Serializer):
+  token = serializers.CharField()
+  telegram_id = serializers.IntegerField()
+  
