@@ -18,14 +18,25 @@ class TelegramConnectView(APIView):
     token = serializer.validated_data["token"]
     telegram_id = serializer.validated_data["telegram_id"]
 
-    token_obj = TelegramLinkToken.objects.filter(
-      token = token,
-      used = False,
-      expires_at__gt = timezone.now()).first()
+    token_obj = TelegramLinkToken.objects.filter(token=token).first()
+    print("HIT TELEGRAM CONNECT VIEW")
     if not token_obj:
-      return Response(
-        {"detail": "invalid token"},
-        status =status.HTTP_400_BAD_REQUEST)
+        return Response(
+            {"detail": "token not found"},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    if token_obj.used:
+        return Response(
+            {"detail": "token already used"},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    if token_obj.expires_at <= timezone.now():
+        return Response(
+            {"detail": "token expired"},
+            status=status.HTTP_400_BAD_REQUEST
+        )
     user = token_obj.user
     user.telegram_id = telegram_id
     user.save()
