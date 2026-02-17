@@ -2,9 +2,10 @@ from rest_framework import serializers
 from habits.models import Habit, HabitStatus
 
 class HabitStatusSerializer(serializers.ModelSerializer):
+    habit_name = serializers.CharField(source='habit.name', read_only=True)
     class Meta:
         model = HabitStatus
-        fields = ['is_completed', 'date']
+        fields = ['id','is_completed', 'date', 'habit_name']
         
 class HabitSerializer(serializers.ModelSerializer):
   goal = serializers.CharField(
@@ -14,4 +15,4 @@ class HabitSerializer(serializers.ModelSerializer):
   habit_statuses = HabitStatusSerializer(many=True, read_only=True)
   class Meta:
     model = Habit
-    fields = ['name','goal','habit_statuses']
+    fields = ['id','name','goal','habit_statuses']

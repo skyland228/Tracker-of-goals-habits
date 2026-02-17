@@ -1,11 +1,11 @@
 import os
+from datetime import datetime
 from dotenv import load_dotenv
 import telebot
 import requests
 from telebot.types import ReplyKeyboardMarkup, KeyboardButton
 from datetime import datetime
-
-
+from help import *
 load_dotenv()
 bot = telebot.TeleBot(os.environ.get('get_info_token'))
 habit_url = os.environ.get('API_HABITS_URL')
@@ -45,26 +45,6 @@ def get_habits(message):
   text = "\n".join(lines)
   bot.send_message(message.chat.id, text)
 
-bot.message_handler(commands = ['get_tgoals'])
-def get_tgoals(message):
-  params = {
-  "telegram_id": message.from_user.id}
-  response = requests.get(tgoal_url, params=params)
-  if response.status_code != 200:
-    bot.send_message(message.chat.id, "Ошибка API")
-    return
-  tgoals = response.json()
-  if not tgoals:
-    bot.send_message(message.chat.id, "Не найдено подцелей")
-  lines = []
-  for tgoal in tgoals:
-    lines.append(tgoal['name'])
-    lines.append(tgoal['deadline'])
-    lines.append(tgoal['is_completed'])
-    lines.append(tgoal['goal'])
-  text = "\n".join(lines)
-  bot.send_message(message.chat.id, text)
-
 @bot.message_handler(commands=['add_habit'])
 def start_add_habit(message):
     bot.send_message(message.chat.id, 'Введите название привычки')
@@ -90,16 +70,52 @@ def add_habit(message):
     bot.register_next_step_handler(message, finish, habit_name)
 
 def finish(message, habit_name):
-  selected_goal = message.text
-  bot.send_message(
-    message.chat.id,
-    f"Создана привычка: {habit_name} → {selected_goal}")
+    selected_goal = message.text
+    payload = {
+        "name": habit_name,
+        "goal": selected_goal,
+        }
+    response = requests.post(habit_url, json=payload, params={"telegram_id": message.from_user.id})
+    if response.status_code == 201:
+      bot.send_message(
+        message.chat.id,
+        f"Создана привычка: {habit_name} → {selected_goal}")
+    else:
+      bot.send_message(
+        message.chat.id,
+        f"Ошибка создания: {response.text}")
 
-bot.message_handler(commands=['status_habit'])
+@bot.message_handler(commands=['change_status_of_habit'])
 def status_habit(message):
-   habits = requests.get(habit_url,
-                         params={"telegram_id": message.from_user.id},
-                         ).json()
-   markup = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
+  habits = requests.get(habit_url,
+                        params={"telegram_id": message.from_user.id},
+                        ).json()
+  habit_data = {}
+  markup = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
+  for habit in habits:
+    button_text = f"{habit['name']}" 
+    markup.add(KeyboardButton(f"{habit['name']} - {get_today_status(get_today(habit['habit_statuses']))}"))
+    habit_data[button_text] = get_today(habit["habit_statuses"])
+  bot.send_message(message.chat.id, 'Выберите Привычку', reply_markup=markup)
+  bot.register_next_step_handler(message, change_status, habit_data)
+def change_status(message, habit_data):
+  habit_id = habit_data[message.text.split(' - ')[0]]['id']
+  habit_status = habit_data[message.text.split(' - ')[0]]['is_completed']
+  today = datetime.now().date().isoformat()
+  habit_status_url = f'http://127.0.0.1:8000/api/v1/habit-statuses/{habit_id}/'
+  status ={
+     'is_completed': not habit_status,
+  }
+  status_icon = "✅" if not habit_status else "❌"
 
+  response = requests.put(habit_status_url, json=status)
+  if response.status_code == 200:
+    bot.send_message(message.chat.id, f"Статус успешно изменён на {status_icon}")
+  else:
+     bot.send_message(message.chat.id, response)
+
+   
+
+
+   
 bot.polling()
