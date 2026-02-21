@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from habits.models import Habit, HabitStatus
+from django.utils import timezone
 
 class HabitStatusSerializer(serializers.ModelSerializer):
     habit_name = serializers.CharField(source='habit.name', read_only=True)
@@ -12,7 +13,11 @@ class HabitSerializer(serializers.ModelSerializer):
     source = "goal.name",
     read_only= True,
     required=False,)
-  habit_statuses = HabitStatusSerializer(many=True, read_only=True)
+  today_status = serializers.SerializerMethodField()
   class Meta:
     model = Habit
-    fields = ['id','name','goal','habit_statuses']
+    fields = ['id','name','goal','today_status']
+
+  def get_today_status(self,obj):
+    status = obj.habit_statuses.filter(date = timezone.localdate()).first()
+    return status.is_completed if status else False

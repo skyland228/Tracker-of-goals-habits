@@ -94,23 +94,21 @@ def status_habit(message):
   markup = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
   for habit in habits:
     button_text = f"{habit['name']}" 
-    markup.add(KeyboardButton(f"{habit['name']} - {get_today_status(get_today(habit['habit_statuses']))}"))
-    habit_data[button_text] = get_today(habit["habit_statuses"])
+    status_icon = "✅" if habit["today_status"] else "❌"
+    markup.add(KeyboardButton(f"{habit['name']} - {status_icon}"))
+    habit_data[button_text] = (habit["id"])
   bot.send_message(message.chat.id, 'Выберите Привычку', reply_markup=markup)
-  bot.register_next_step_handler(message, change_status, habit_data)
-def change_status(message, habit_data):
-  habit_id = habit_data[message.text.split(' - ')[0]]['id']
-  habit_status = habit_data[message.text.split(' - ')[0]]['is_completed']
-  today = datetime.now().date().isoformat()
-  habit_status_url = f'http://127.0.0.1:8000/api/v1/habit-statuses/{habit_id}/'
-  status ={
-     'is_completed': not habit_status,
-  }
-  status_icon = "✅" if not habit_status else "❌"
+  bot.register_next_step_handler(message,change_status, habit_data) # мы передали ид всех привычек
+def change_status(message,habit_data):
+  habit_name = message.text.split(' -')[0]
+  habit_id = habit_data[habit_name]
+  habit_status_url = f'http://127.0.0.1:8000/api/v1/habits/{habit_id}/toggle_status/'
 
-  response = requests.put(habit_status_url, json=status)
+  response = requests.post(habit_status_url, params={"telegram_id": message.from_user.id})
+  status_habit = response.json()
+  status_icon = "✅" if status_habit['is_completed'] else "❌"
   if response.status_code == 200:
-    bot.send_message(message.chat.id, f"Статус успешно изменён на {status_icon}")
+    bot.send_message(message.chat.id, f"Статус успешно изменён")
   else:
      bot.send_message(message.chat.id, response)
 
