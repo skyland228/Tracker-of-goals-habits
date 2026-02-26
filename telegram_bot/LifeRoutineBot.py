@@ -5,12 +5,11 @@ import telebot
 import requests
 from telebot.types import ReplyKeyboardMarkup, KeyboardButton
 from datetime import datetime
-from help import *
 load_dotenv()
 bot = telebot.TeleBot(os.environ.get('get_info_token'))
 habit_url = os.environ.get('API_HABITS_URL')
 tgoal_url = os.environ.get('API_TGOALS_URL')
-
+stats_url = os.environ.get('API_STATS_URL')
 @bot.message_handler(commands=['get_habits'])
 def get_habits(message):
   params = {
@@ -105,15 +104,27 @@ def change_status(message,habit_data):
   habit_status_url = f'http://127.0.0.1:8000/api/v1/habits/{habit_id}/toggle_status/'
 
   response = requests.post(habit_status_url, params={"telegram_id": message.from_user.id})
-  status_habit = response.json()
-  status_icon = "✅" if status_habit['is_completed'] else "❌"
   if response.status_code == 200:
     bot.send_message(message.chat.id, f"Статус успешно изменён")
   else:
-     bot.send_message(message.chat.id, response)
+    bot.send_message(message.chat.id, response)
 
-   
-
-
+@bot.message_handler(commands=['stats'])
+def get_stats(message):
+  response = requests.get(stats_url,params={'telegram_id': message.from_user.id})
+  stat = response.json()
+  streak = stat["streak"]
+  completed = stat["total_progress"]["completed"]
+  total = stat["total_progress"]["total"]
+  percentage = stat["total_progress"]["percentage"]
+  lines = []
+  lines.append(f"Стрик: {streak}")
+  lines.append(f"Прогресс: {completed} из {total}")
+  lines.append(f"Процент выполнения: {percentage}%")
+  text = "\n".join(lines)
+  if response.status_code == 200:
+    bot.send_message(message.chat.id,text)
+  else:
+    bot.send_message(message.chat.id, response)
    
 bot.polling()

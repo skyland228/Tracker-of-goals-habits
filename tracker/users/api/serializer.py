@@ -10,3 +10,11 @@ class TelegramConnectSerializer(serializers.Serializer):
   token = serializers.CharField()
   telegram_id = serializers.IntegerField()
   
+class TotalProgressSerializer(serializers.Serializer):
+    completed = serializers.IntegerField()
+    total = serializers.IntegerField()
+    percentage = serializers.IntegerField()
+
+class StatisicsSerializer(serializers.Serializer):
+  streak = serializers.IntegerField()
+  total_progress = TotalProgressSerializer()

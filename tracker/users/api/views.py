@@ -1,10 +1,11 @@
 from django.contrib.auth  import get_user_model
 from rest_framework import viewsets, status
-from .serializer import UserSerializer, TelegramConnectSerializer
+from .serializer import UserSerializer, TelegramConnectSerializer, StatisicsSerializer
 from rest_framework.views import APIView
 from users.models import TelegramLinkToken
 from django.utils import timezone
 from rest_framework.response import Response
+from users.services.general_service import StatsService
 
 User = get_user_model()
 class UserApiView(viewsets.ReadOnlyModelViewSet):
@@ -46,3 +47,16 @@ class TelegramConnectView(APIView):
     return Response(
       {"detail": "ok"},
       status=status.HTTP_200_OK)
+
+class StatisticApiView(viewsets.ViewSet):
+   def list(self,request):
+    telegram_id = request.GET.get('telegram_id')
+    if not telegram_id:
+        user = request.user
+        result = StatsService.calculate_stats(user)
+        serializer = StatisicsSerializer(instance = result)
+        return Response(serializer.data)
+    user = User.objects.get(telegram_id = telegram_id)
+    result = StatsService.calculate_stats(user)
+    serializer = StatisicsSerializer(instance = result)
+    return Response(serializer.data)

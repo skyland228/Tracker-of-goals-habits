@@ -7,7 +7,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from users.services.general_service import StatsService
 from .forms import RegisterUserForm, ChangeProfileForm
 from django.contrib.auth.decorators import login_required
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 class LoginUser(LoginView):
     form_class = AuthenticationForm 
@@ -20,8 +20,9 @@ class RegisterUser(CreateView):
     extra_context = {'title': 'Регистрация'}
     success_url = reverse_lazy('users:login')
 
-class Statistics(TemplateView):
+class Statistics(LoginRequiredMixin,TemplateView):
     template_name = 'users/statistics.html'
+    login_url = 'users:login'
     def get_context_data(self, **kwargs):
         stats = StatsService.calculate_stats(self.request.user)
         context = super().get_context_data(**kwargs)   
