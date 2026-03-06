@@ -1,11 +1,11 @@
-from django.contrib.auth.views import LoginView 
+from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from .models import TelegramLinkToken
 from django.views.generic import CreateView, TemplateView, UpdateView
 from django.contrib.auth.forms import AuthenticationForm
 from users.services.general_service import StatsService
-from .forms import RegisterUserForm, ChangeProfileForm
+from .forms import RegisterUserForm, ChangeProfileForm, PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -42,3 +42,9 @@ def connect_telegram(request):
     token_obj = TelegramLinkToken.create_token(request.user)
     link = f'https://t.me/skylandbot_bot?start={token_obj.token}'
     return redirect(link)
+
+class UserPasswordChange(PasswordChangeView):
+    form_class = PasswordChangeForm
+    success_url = reverse_lazy('users:password_change_done')
+    template_name = 'users/password_change_form.html'
+    

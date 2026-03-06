@@ -1,6 +1,6 @@
 import re
 from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django import forms
 from django.core.exceptions import ValidationError
 
@@ -36,3 +36,8 @@ class ChangeProfileForm(forms.ModelForm):
     class Meta:
         model = get_user_model()
         fields = ['first_name','last_name','image','email','bio']
+
+class UserPasswordChangeForm(PasswordChangeForm):
+    old_password = forms.CharField(label = 'Старый пароль',widget = forms.PasswordInput(attrs={'class':'form-input'}))
+    new_password1 = forms.CharField(label="Новый пароль", widget=forms.PasswordInput(attrs={'class': 'form-input'}))
+    new_password2 = forms.CharField(label="Подтверждение пароля", widget=forms.PasswordInput(attrs={'class': 'form-input'}))
