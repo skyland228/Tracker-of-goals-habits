@@ -1,12 +1,27 @@
-from datetime import date, timedelta
+from datetime import timedelta
 from django.db.models import Count, Q,Prefetch
 from habits.models import Habit, HabitStatus
+from django.utils import timezone
 
 class HabitServices:
+    """
+    Рассчитывает процент выполнения глобальной цели.
+    Прогресс определяется по доле выполненных временных целей.
+    Если у глобальной цели указана главная подцель и она выполнена,
+    к базовому прогрессу добавляется бонус 20%.
+    Итоговое значение не может превышать 100.
+    """
     @staticmethod
     def ensure_habit_statuses_exist(user):
+        """
+        Создаёт недостающие ежедневные статусы привычек пользователя.
+        Для каждой привычки пользователя метод проверяет,
+        есть ли записи `HabitStatus` на все даты от дня создания привычки
+        до текущего дня. Если каких-то записей нет, они создаются автоматически.
+        Метод изменяет данные в базе.
+        """
         habits = Habit.objects.filter(user=user)
-        today = date.today() 
+        today = timezone.localdate()
         
         all_existing_statuses = HabitStatus.objects.filter( 
             habit__user=user
@@ -36,9 +51,21 @@ class HabitServices:
         
         if statuses_to_create:
             HabitStatus.objects.bulk_create(statuses_to_create, batch_size=100)
-
+    @staticmethod
     def get_user_habit_stats(user):
-        today = date.today()
+        """
+        Возвращает привычки пользователя вместе с вычисленной статистикой.
+
+        Перед выборкой метод сначала гарантирует наличие ежедневных статусов.
+        Затем для каждой привычки рассчитывает:
+        - общее число дней отслеживания;
+        - число выполненных дней;
+        - процент выполнения;
+        - статус на текущий день.
+
+        Возвращает queryset привычек с дополнительными вычисленными полями.
+        """
+        today = timezone.localdate()
         HabitServices.ensure_habit_statuses_exist(user)
         habits = Habit.objects.filter(user = user).annotate(
             total_days = Count('habit_statuses'),
@@ -48,7 +75,13 @@ class HabitServices:
             habit.habit_progress = int((habit.completed_days / habit.total_days) * 100) if habit.total_days > 0 else 0
             habit.today_status = habit.today_statuses[0] if habit.today_statuses else None
         return habits
-    
-    def change_status(status): # делает смену статуса
+    @staticmethod
+    def change_status(status):
+        """
+        Переключает статус выполнения привычки за конкретную дату.
+
+        Меняет значение поля `is_completed` у объекта `HabitStatus`
+        на противоположное и сохраняет его в базе данных.
+        """
         status.is_completed = not status.is_completed
         status.save() 

@@ -1,4 +1,3 @@
-from datetime import timedelta
 from django.db.models import Count, Q
 from django.utils import timezone
 from habits.models import HabitStatus
@@ -13,17 +12,17 @@ class StatsService:
         completed = Count('id', filter=Q(is_completed = True))
         ) 
         streak = 0
-
+        today = timezone.localdate()
         for stat in all_statuses:
             date = stat['date']
             total = stat['total']
             completed = stat['completed']
-            if date == timezone.now().date():
+            if date == today:
                 if total > 0 and total == completed:
                     streak +=1
                 else:
                     continue
-            if date != timezone.now().date():
+            if date != today:
                 if total > 0 and total == completed:
                     streak += 1
                 else: 
@@ -41,10 +40,10 @@ class StatsService:
                     max_streak = current_streak 
             else:
                 current_streak = 0
-        
+
         stats = HabitStatus.objects.filter(habit__user = user).aggregate(
-            today_total = Count('id', filter=Q(date = timezone.now().date())),
-            today_completed = Count('id', filter=Q(date = timezone.now().date(), is_completed = True)),
+            today_total = Count('id', filter=Q(date=today)),
+            today_completed = Count('id', filter=Q(date=today, is_completed=True)),
             total_all = Count('id'), # общее кол-во вообще
             total_completed = Count('id', filter = Q(is_completed = True)))# выполненные вообще)
         total_completed_value = stats['total_completed'] or 0

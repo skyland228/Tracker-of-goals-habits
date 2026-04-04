@@ -1,14 +1,31 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<form method="POST">
-    {% csrf_token %}
-    {% for field in form %}
-    <div class="form-group">{{ field.as_field_group }}</div>
-    {% endfor %}
-    <button type="submit">
-        Сохранить изменения
-    </button>
-</form>
-<p><a href="{% url 'users:password_change' %}">Сменить пароль</a></p>
+
+<div class="profile-container">
+
+    <h1 class="profile-title">Редактирование профиля</h1>
+
+    <form method="POST" class="profile-form">
+        {% csrf_token %}
+
+        {% for field in form %}
+        <div class="form-group">
+            <label class="form-label">{{ field.label }}</label>
+            {{ field }}
+            <div class="form-error">{{ field.errors }}</div>
+        </div>
+        {% endfor %}
+
+        <button type="submit" class="profile-save-btn">
+            Сохранить изменения
+        </button>
+    </form>
+
+<p class="profile-actions">
+    <a href="{% url 'users:password_change' %}" class="profile-password-btn">Сменить пароль</a>
+</p>
+
+</div>
+
 {% endblock %}

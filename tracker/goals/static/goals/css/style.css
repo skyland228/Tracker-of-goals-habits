@@ -205,7 +205,16 @@ body {
     border-radius: 6px;
     transition: background-color 0.2s ease, transform 0.1s ease;
 }
-
+.profile-action-link {
+    display: inline-block;
+    padding: 8px 14px;
+    background-color: #4a6fa5;
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    border-radius: 6px;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
 .habit-programming {
     background-color: #e3f2fd;
     border-left: 4px solid #2196f3;
@@ -288,10 +297,77 @@ body {
 .stat-box:nth-child(4) {
     border-top: 4px solid #9013fe;
 }
+.profile-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.profile-title {
+    margin-bottom: 25px;
+}
+
 .form-group {
-    display: flex;
-    align-items: center;
-    gap: 15px;
+    margin-bottom: 18px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+.profile-form input,
+.profile-form textarea,
+.profile-form select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.profile-save-btn {
+    margin-top: 10px;
+    padding: 10px 18px;
+    border: none;
+    background: #4a6fa5;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.profile-save-btn:hover {
+    background: #3b5a86;
+}
+
+.profile-actions {
+    margin-top: 25px;
+}
+
+.profile-action-link {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2a7be4;
+    text-decoration: none;
+}
+
+.profile-action-link:hover {
+    text-decoration: underline;
+}
+
+.form-error {
+    color: #d93025;
+    font-size: 13px;
+}
+.profile-password-btn {
+    display: inline-block;
+    padding: 10px 18px;
+    background-color: #4960ca;
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    border-radius: 6px;
+    transition: background-color 0.2s ease, transform 0.1s ease;
 }
 .select-form,
 .name-form,

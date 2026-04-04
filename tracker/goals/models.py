@@ -1,10 +1,16 @@
-from datetime import date, timedelta
+from datetime import timedelta
+from django.utils import timezone
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.urls import reverse
 
 def default_deadline():
-    return date.today() + timedelta(days=30)
+    """
+    Возвращает дату дедлайна по умолчанию для временной цели.
+    В качестве стандартного срока используется дата,
+    отстоящая на 30 дней от текущего дня.
+    """
+    return timezone.localdate() + timedelta(days=30)
 
 class TemporalGoal(models.Model):
     name = models.CharField(max_length=50,verbose_name='Название')

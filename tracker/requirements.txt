@@ -10,6 +10,7 @@ colorama==0.4.6
 comtypes==1.4.14
 Django==5.2.8
 djangorestframework==3.16.1
+djangorestframework_simplejwt==5.5.1
 edge-tts==7.2.7
 frozenlist==1.8.0
 greenlet==3.3.0
@@ -20,6 +21,7 @@ pillow==12.0.0
 playwright==1.57.0
 propcache==0.4.1
 pyee==13.0.0
+PyJWT==2.12.1
 pypiwin32==223
 python-dotenv==1.2.1
 pyttsx3==2.99
